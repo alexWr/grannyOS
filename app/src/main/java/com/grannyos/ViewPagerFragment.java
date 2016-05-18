@@ -1,0 +1,157 @@
+package com.grannyos;
+
+import android.app.Fragment;
+import android.content.SharedPreferences;
+import android.location.Location;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.grannyos.network.RestInterface;
+import com.grannyos.network.WeatherResponse;
+import com.grannyos.utils.GPSTracker;
+import com.grannyos.utils.HideViews;
+import com.grannyos.utils.ZoomOutPageTransformer;
+
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
+
+public class ViewPagerFragment extends Fragment implements View.OnClickListener{
+
+    private final static String TAG = "ViewPagerGrannyOs";
+    private ViewPager           viewPager;
+    private ImageView           nextButton;
+    private ImageView           prevButton;
+    private ChangeListener      mListener = new ChangeListener();
+    private TextView            tvHelpDescription;
+    private TextView            previouslyPageDescription;
+    private TextView            nextPageDescription;
+    private String[]            helpDescription;
+    private ViewPagerAdapter    adapter;
+    private GPSTracker          gps;
+    private HideViews           hideViews;
+    public static String        city = "";
+    public static double        lat = 0.0;
+    public static double        lon = 0.0;
+
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.main_pager, container, false);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        helpDescription = getActivity().getResources().getStringArray(R.array.help_description);
+        viewPager=(ViewPager)rootView.findViewById(R.id.pagerSurveys);
+        prevButton = (ImageView) rootView.findViewById(R.id.previousPage);
+        nextButton = (ImageView) rootView.findViewById(R.id.nextPage);
+        tvHelpDescription = (TextView) rootView.findViewById(R.id.helpDescription);
+        previouslyPageDescription = (TextView) rootView.findViewById(R.id.previouslyPageDescription);
+        nextPageDescription = (TextView) rootView.findViewById(R.id.nextPageDescription);
+        prevButton.setOnClickListener(this);
+        nextButton.setOnClickListener(this);
+        viewPager.setPageTransformer(true, new ZoomOutPageTransformer());
+        adapter = new ViewPagerAdapter(getActivity(), getChildFragmentManager(), GrannyOsListElement.class, 8);
+        viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(0);
+        viewPager.addOnPageChangeListener(mListener);
+        tvHelpDescription.setText(helpDescription[viewPager.getCurrentItem()]);
+        editor.putBoolean("firstTime", true);
+        editor.apply();
+        return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        hideViews = new HideViews(viewPager);
+        hideViews.visibility(prevButton, previouslyPageDescription, nextButton, nextPageDescription);
+        gps = new GPSTracker(getActivity(), locationResult);
+        if (gps.canGetLocation()) {
+            gps.getLocation(getActivity(), locationResult);
+        } else {
+            gps.showSettingsAlert();
+        }
+    }
+
+    public class ChangeListener implements ViewPager.OnPageChangeListener{
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            if (state == ViewPager.SCROLL_STATE_IDLE) {
+                hideViews.visibility(prevButton, previouslyPageDescription, nextButton, nextPageDescription);
+                tvHelpDescription.setText(helpDescription[viewPager.getCurrentItem()]);
+            }
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.previousPage:
+                viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+                break;
+            case R.id.nextPage:
+                viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+                break;
+        }
+    }
+
+
+    GPSTracker.LocationResult locationResult = new GPSTracker.LocationResult() {
+        @Override
+        public void gotLocation(Location location) {
+            if(location!=null && getActivity() != null) {
+                lat = location.getLatitude();
+                lon = location.getLongitude();
+                Log.d(TAG, "my current location lat " + lat + " lon " + lon);
+                String endPoint = getActivity().getApplicationContext().getResources().getString(R.string.weatherEndpoint);
+                RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endPoint).build();
+                RestInterface restInterface = restAdapter.create(RestInterface.class);
+                restInterface.getWeather(lat, lon, 1, "metric", "f14cffd70e58afbe1ecc268c56ffd507", new Callback<WeatherResponse>() {
+                    @Override
+                    public void success(WeatherResponse weatherResponse, Response response) {
+                        city = weatherResponse.getCity().getName();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.d(TAG, "error while get city name " + error);
+                    }
+                });
+            }
+            else{
+                if(gps != null){
+                    gps.stopUsingGPS();
+                }
+            }
+        }
+    };
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(gps!=null){
+            gps.stopUsingGPS();
+        }
+    }
+}

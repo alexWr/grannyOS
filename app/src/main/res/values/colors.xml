@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorAccent">#FF4081</color>
+    <color name="black_overlay">#66000000</color>
+    <color name="black">#ff000000</color>
+    <color name="white">#ffffffff</color>
+    <color name="grey">#ff788b9d</color>
+    <color name="blue">#ff007cf7</color>
+    <color name="green">#ff11c551</color>
+    <color name="red">#ffee304e</color>
+    <color name="red_google">#ffde4c34</color>
+    <color name="transparent_white">#CCffffff</color>
+    <color name="background_grey">#ff3c4c5b</color>
+    <color name="background_grey_back">#ff748798</color>
+    <color name="background_white_description">#ecf2f8</color>
+    <color name="white_button_border">#ffcfddea</color>
+    <color name="dark_blue">#ff00182f</color>
+</resources>

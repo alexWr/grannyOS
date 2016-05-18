@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ButtonBarContainerTheme">
+        <attr name="metaButtonBarStyle" format="reference" />
+        <attr name="metaButtonBarButtonStyle" format="reference" />
+    </declare-styleable>
+    <dimen name="textSizeLarge">50sp</dimen>
+    <dimen name="textSizeXLarge">120sp</dimen>
+    <dimen name="textSizeSmall">20sp</dimen>
+    <dimen name="textSize">30sp</dimen>
+    <dimen name="marginTop">60dp</dimen>
+    <dimen name="marginStart">60dp</dimen>
+    <dimen name="marginEnd">60dp</dimen>
+    <dimen name="marginBottom">60dp</dimen>
+    <dimen name="marginTopSmall">15dp</dimen>
+    <dimen name="marginStartSmall">15dp</dimen>
+    <dimen name="marginEndSmall">15dp</dimen>
+    <dimen name="marginTopTitleBack">66dp</dimen>
+    <dimen name="marginTopLarge">130dp</dimen>
+    <dimen name="backBtnWidth">50dp</dimen>
+    <dimen name="backBtnHeight">50dp</dimen>
+    <dimen name="mainIconWidth">300dp</dimen>
+    <dimen name="mainIconHeight">300dp</dimen>
+    <dimen name="circleBorder">15dp</dimen>
+    <dimen name="mainButtonHeight">70dp</dimen>
+    <dimen name="backBtnPhotoWidth">120dp</dimen>
+    <dimen name="backBtnPhotoHeight">60dp</dimen>
+    <dimen name="countPhotoHeight">45dp</dimen>
+    <dimen name="countPhotoWidth">140dp</dimen>
+    <dimen name="btnPhotoWidth">100dp</dimen>
+    <dimen name="btnPhotoHeight">100dp</dimen>
+    <dimen name="missingCallWidth">80dp</dimen>
+    <dimen name="missingCallHeight">80dp</dimen>
+</resources>

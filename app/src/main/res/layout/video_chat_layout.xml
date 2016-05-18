@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--<android.opengl.GLSurfaceView
+        android:id="@+id/gl_surface"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent" />-->
+
+    <VideoView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/videoChat"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/backBtnHeight"
+        android:id="@+id/finishCall"
+        android:layout_marginTop="@dimen/marginTopSmall"
+        android:textColor="@color/white"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/marginBottom"
+        android:text="@string/endCall"
+        android:textStyle="bold"
+        android:textSize="@dimen/textSizeLarge"
+        android:gravity="center"
+        android:paddingStart="@dimen/marginStartDescPhoto"
+        android:paddingEnd="@dimen/marginEndDescPhoto"
+        android:background="@drawable/custom_end_call_button" />
+    <include
+        layout="@layout/status_bar_with_bck_layout"/>
+</RelativeLayout>

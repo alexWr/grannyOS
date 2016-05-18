@@ -1,0 +1,71 @@
+<resources>
+    <string name="app_name">GrannyOs</string>
+    <string name="endpoint">https://dev.grannyos.com/api</string>
+    <string name="endpointSocketURL">https://dev.grannyos.com</string>
+    <string name="endpointSocketPath">/bone/socket.io</string>
+    <string name="weatherEndpoint">http://api.openweathermap.org</string>
+    <string name="battery_charge">Battery</string>
+    <string name="wifi_strength">WiFi</string>
+    <string name="just_press">Just click!</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+    <string name="prev">Prev</string>
+    <string name="congratulate">Congratulate</string>
+    <string name="help_album">To see photos and videos tap here</string>
+    <string name="just_press_call">To call your family tap here</string>
+    <string name="eventDescription">Event description</string>
+    <string name="dont_forget">Don`t forget to greet!</string>
+    <string name="just_press_for_seen">Just click to watch!</string>
+    <string name="albumTitle">Album title</string>
+    <string name="sos_send">Sending … </string>
+    <string name="sos_cancel">Cancel!</string>
+    <string name="answer">Accept</string>
+    <string name="decline">Decline</string>
+    <string name="record">Record</string>
+    <string name="stop_record">Stop record</string>
+    <string name="recording">You are recording the memoirs</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="registration">Device registration. Please, sign in with your Google account to proceed with device setting.</string>
+    <string name="loginViaGoogle">Enter via google</string>
+    <string name="getDataFromGoogle">Fetching data from Google server … </string>
+    <string name="alert_message">Error fetching data!</string>
+    <string name="getPhoto">Fetching events …</string>
+    <string name="getRelatives">Fetching the list of relatives … </string>
+    <string name="getAlbums">Fetching the list of albums … </string>
+    <string name="callTo">Calling: </string>
+    <string name="exitButton">Quit </string>
+    <string name="endCall">Cancel call </string>
+    <string name="startCall">Call</string>
+    <string name="okClose">OK, close</string>
+    <string name="make_call">Make call</string>
+    <string name="look">View</string>
+    <string-array name="description_main_icon">
+        <item>Video call</item>
+        <item>Events</item>
+        <item>Albums</item>
+        <item>Health</item>
+        <item>Remainder</item>
+        <item>Memoirs</item>
+        <item>Media</item>
+        <item>Weather</item>
+    </string-array>
+    <string-array name="help_description">
+        <item>To call your family tap here</item>
+        <item>To see events of your family tap here</item>
+        <item>To see photos and videos tap here</item>
+        <item>To see health records tap here</item>
+        <item>To see events of your family tap here</item>
+        <item>To record your memoir tap here</item>
+        <item>To see media of your family tap here</item>
+        <item>To see weather tap here</item>
+    </string-array>
+    <string name="blood_pressure">Blood pressure </string>
+    <string name="body_temp">Body temperature</string>
+    <string name="heart_rate">Heart rate</string>
+    <string name="oxygen_level">Oxygen level</string>
+    <string name="phases_level">Phases of the sleep</string>
+    <string name="fahrenheit">°F</string>
+    <string name="pbm">PBM</string>
+    <string name="percent">%</string>
+</resources>

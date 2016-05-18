@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/loginLogo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/marginTopLarge"
+        android:src="@drawable/login_logo" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:id="@+id/descriptionLogin"
+        android:textSize="@dimen/googleHelpTextSize"
+        android:text="@string/registration"
+        android:textColor="@color/grey"
+        android:layout_below="@+id/loginLogo"
+        android:layout_marginTop="@dimen/marginTopSmall"
+        android:layout_marginStart="@dimen/marginStart"
+        android:layout_marginEnd="@dimen/marginEnd"/>
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="90dp"
+        android:id="@+id/loginGoogle"
+        android:layout_marginStart="@dimen/marginStartGoogleButton"
+        android:layout_marginEnd="@dimen/marginEndGoogleButton"
+        android:layout_marginTop="@dimen/marginTop"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/descriptionLogin"
+        android:textSize="@dimen/googleTextSize"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:text="@string/loginViaGoogle"
+        android:drawableStart="@drawable/google_plus"
+        android:paddingStart="@dimen/marginStartSmall"
+        android:background="@drawable/custom_google_plus" />
+</RelativeLayout>

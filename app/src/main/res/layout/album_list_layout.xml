@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/showPhotoIcon">
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/mainProfileIcon"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/marginTop"
+            android:layout_width="@dimen/mainIconWidth"
+            android:layout_height="@dimen/mainIconHeight"
+            android:clickable="true"
+            app:riv_oval="true"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/showPhotoIcon"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/showPhoto">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/descriptionMainIcon"
+            android:maxLines = "1"
+            android:minLines="1"
+            android:layout_marginTop="@dimen/marginTopSmall"
+            android:textColor="@color/black"
+            android:layout_centerHorizontal="true"
+            android:text="@string/albumTitle"
+            android:textStyle="bold"
+            android:textSize="@dimen/textSizeLarge"
+            android:gravity="center" />
+    </RelativeLayout>
+</RelativeLayout>

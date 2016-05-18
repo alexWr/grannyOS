@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/iconEvent"
+        android:layout_marginTop="@dimen/marginTop"
+        android:layout_width="@dimen/mainIconWidth"
+        android:layout_height="@dimen/mainIconHeight"
+        android:layout_centerHorizontal="true"
+        android:clickable="true"
+        app:riv_oval="true"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/descriptionMainIcon"
+        android:layout_marginTop="@dimen/marginTopSmall"
+        android:layout_below="@+id/iconEvent"
+        android:maxLines = "1"
+        android:minLines="1"
+        android:textColor="@color/black"
+        android:layout_centerHorizontal="true"
+        android:text="@string/eventDescription"
+        android:textStyle="bold"
+        android:textSize="@dimen/textSizeLarge"
+        android:gravity="center" />
+</RelativeLayout>

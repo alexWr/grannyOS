@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Text size  -->
+
+    <dimen name="textSize">27sp</dimen>
+    <dimen name="textSizeSmall">20sp</dimen>
+    <dimen name="textSizeWeather">20sp</dimen>
+    <dimen name="textSizeLarge">45sp</dimen>
+    <dimen name="textSizeXLarge">150sp</dimen>
+    <dimen name="textSizeWeatherLarge">50sp</dimen>
+    <dimen name="textSizeBloodPressure">50sp</dimen>
+    <dimen name="textSizeButton">35sp</dimen>
+    <dimen name="textSizeStatusBar">20sp</dimen>
+    <dimen name="textSizeStatusBarClock">35sp</dimen>
+    <dimen name="googleTextSize">30sp</dimen>
+    <dimen name="googleHelpTextSize">25sp</dimen>
+
+    <!-- Main margin  -->
+
+    <dimen name="marginTop">37dp</dimen>
+    <dimen name="marginEnd">50dp</dimen>
+    <dimen name="marginStart">50dp</dimen>
+    <dimen name="marginBottom">43dp</dimen>
+    <dimen name="marginTopSmall">15dp</dimen>
+    <dimen name="marginEndSmall">15dp</dimen>
+    <dimen name="marginStartSmall">15dp</dimen>
+    <dimen name="marginBottomSmall">10dp</dimen>
+
+    <!-- Margin in other view -->
+
+    <dimen name="marginTopProgress">14dp</dimen>
+    <dimen name="marginTopOnline">80dp</dimen>
+    <dimen name="marginTopWeather">80dp</dimen>
+    <dimen name="marginStartDescription">225dp</dimen>
+    <dimen name="marginEndDescription">225dp</dimen>
+    <dimen name="marginStartDescPhoto">40dp</dimen>
+    <dimen name="marginEndDescPhoto">40dp</dimen>
+    <dimen name="marginBottomArrow">100dp</dimen>
+    <dimen name="marginHealthSmall">20dp</dimen>
+    <dimen name="marginTopTitleBack">66dp</dimen>
+    <dimen name="marginTopLarge">70dp</dimen>
+    <dimen name="marginPhotoDate">60dp</dimen>
+    <dimen name="marginTopPhotoBtn">90dp</dimen>
+    <dimen name="marginTopCountBtn">90dp</dimen>
+    <dimen name="marginTopMissingCall">48dp</dimen>
+    <dimen name="marginTextMissingCall">-75dp</dimen>
+    <dimen name="marginStartGoogleButton">200dp</dimen>
+    <dimen name="marginEndGoogleButton">200dp</dimen>
+    <dimen name="marginTopNotifArrow">75dp</dimen>
+    <dimen name="marginTopWeatherIcon">65dp</dimen>
+
+    <!-- Views is width and height -->
+
+    <dimen name="statusBarHeight">70dp</dimen>
+    <dimen name="mainArrowWidth">70dp</dimen>
+    <dimen name="mainArrowHeight">150dp</dimen>
+    <dimen name="tableWeatherHeight">40dp</dimen>
+    <dimen name="smallIconHealthWidth">120dp</dimen>
+    <dimen name="smallIconHealthHeight">120dp</dimen>
+    <dimen name="backBtnWidth">150dp</dimen>
+    <dimen name="backBtnHeight">100dp</dimen>
+    <dimen name="mainIconWidth">220dp</dimen>
+    <dimen name="mainIconHeight">220dp</dimen>
+    <dimen name="iconNotifWidth">170dp</dimen>
+    <dimen name="iconNotifHeight">170dp</dimen>
+    <dimen name="mainIconWidthProfile">250dp</dimen>
+    <dimen name="mainIconHeightProfile">250dp</dimen>
+    <dimen name="mainIconWidthCallProgress">320dp</dimen>
+    <dimen name="mainIconHeightCallProgress">320dp</dimen>
+    <dimen name="circleBorder">15dp</dimen>
+    <dimen name="mainButtonHeight">60dp</dimen>
+    <dimen name="backBtnPhotoWidth">120dp</dimen>
+    <dimen name="backBtnPhotoHeight">60dp</dimen>
+    <dimen name="countPhotoHeight">45dp</dimen>
+    <dimen name="countPhotoWidth">140dp</dimen>
+    <dimen name="btnPhotoWidth">100dp</dimen>
+    <dimen name="btnPhotoHeight">100dp</dimen>
+    <dimen name="missingCallWidth">80dp</dimen>
+    <dimen name="missingCallHeight">80dp</dimen>
+    <dimen name="widthClickRegion">500dp</dimen>
+
+</resources>

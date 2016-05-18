@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="@dimen/mainIconWidth"
+        android:layout_height="@dimen/mainIconHeight"
+        android:id="@+id/recordTime"
+        android:layout_marginTop="@dimen/marginTop"
+        android:background="@drawable/circle_relative"
+        android:layout_centerHorizontal="true">
+        <Chronometer
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/chronometer"
+            android:layout_centerInParent="true"
+            android:textSize="@dimen/textSizeBloodPressure"/>
+    </RelativeLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/mainButtonHeight"
+        android:id="@+id/stopRecord"
+        android:layout_marginTop="@dimen/marginTopSmall"
+        android:textColor="@color/white"
+        android:text="@string/stop_record"
+        android:textStyle="bold"
+        android:textSize="@dimen/textSizeLarge"
+        android:gravity="center"
+        android:textAllCaps="false"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/marginBottom"
+        android:layout_marginEnd="@dimen/marginEndSmall"
+        android:paddingStart="@dimen/marginStartDescPhoto"
+        android:paddingEnd="@dimen/marginEndDescPhoto"
+        android:background="@drawable/custom_end_call_button" />
+</RelativeLayout>
