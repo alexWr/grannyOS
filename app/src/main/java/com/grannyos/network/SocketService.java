@@ -71,10 +71,11 @@ public class SocketService extends Service {
         sendBroadcast(sendIntent);
     }
 
-    public void sendDataToActivityFromEvent(DifferentEvents differentEvents){
+    public void sendDataToActivityFromEvent(DifferentEvents differentEvents, String id){
         Intent sendIntent = new Intent();
         sendIntent.setAction(EVENTS);
         sendIntent.putExtra("differentEvents", differentEvents);
+        sendIntent.putExtra("gettingId", id);
         sendBroadcast(sendIntent);
     }
 
@@ -149,67 +150,223 @@ public class SocketService extends Service {
         socket.on("relativeAdded", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                sendDataToActivityFromEvent(DifferentEvents.relativeAdded);
+                if(args[0] != null) {
+                    try{
+                        JSONObject json = new JSONObject(args[0].toString());
+                        String id = json.getString("relativeId");
+                        sendDataToActivityFromEvent(DifferentEvents.relativeAdded, id);
+                    } catch(Throwable e){
+                        Log.d(TAG, "Error parsing json relativeAdded");
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    Log.d(TAG, "relativeAdded args is null");
+                }
             }
         }).on("relativeRemoved", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                sendDataToActivityFromEvent(DifferentEvents.relativeRemoved);
+                if(args[0] != null) {
+                    try{
+                        JSONObject json = new JSONObject(args[0].toString());
+                        String id = json.getString("relativeId");
+                        sendDataToActivityFromEvent(DifferentEvents.relativeRemoved, id);
+                    } catch(Throwable e){
+                        Log.d(TAG, "Error parsing json relativeRemoved");
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    Log.d(TAG, "relativeRemoves args is null");
+                }
             }
         }).on("relativeUpdated", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                sendDataToActivityFromEvent(DifferentEvents.relativeUpdated);
+                if(args[0] != null) {
+                    try{
+                        JSONObject json = new JSONObject(args[0].toString());
+                        String id = json.getString("relativeId");
+                        sendDataToActivityFromEvent(DifferentEvents.relativeUpdated, id);
+                    } catch(Throwable e){
+                        Log.d(TAG, "Error parsing json relativeUpdate");
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    Log.d(TAG, "relativeUpdate args is null");
+                }
             }
         }).on("albumAdded", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                sendDataToActivityFromEvent(DifferentEvents.albumAdded);
+                if(args[0] != null) {
+                    try{
+                        JSONObject json = new JSONObject(args[0].toString());
+                        String id = json.getString("albumId");
+                        sendDataToActivityFromEvent(DifferentEvents.albumAdded, id);
+                    } catch(Throwable e){
+                        Log.d(TAG, "Error parsing json albumAdded");
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    Log.d(TAG, "albumAdded args is null");
+                }
             }
         }).on("albumRemoved", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                sendDataToActivityFromEvent(DifferentEvents.albumRemoved);
+                if(args[0] != null) {
+                    try{
+                        JSONObject json = new JSONObject(args[0].toString());
+                        String id = json.getString("albumId");
+                        sendDataToActivityFromEvent(DifferentEvents.albumRemoved, id);
+                    } catch(Throwable e){
+                        Log.d(TAG, "Error parsing json albumRemoved");
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    Log.d(TAG, "albumRemoved args is null");
+                }
             }
         }).on("albumUpdated", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                sendDataToActivityFromEvent(DifferentEvents.albumAssetUpdated);
+                if(args[0] != null) {
+                    try{
+                        JSONObject json = new JSONObject(args[0].toString());
+                        String id = json.getString("albumId");
+                        sendDataToActivityFromEvent(DifferentEvents.albumUpdated, id);
+                    } catch(Throwable e){
+                        Log.d(TAG, "Error parsing json albumUpdated");
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    Log.d(TAG, "albumUpdated args is null");
+                }
             }
         }).on("albumAssetAdded", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                sendDataToActivityFromEvent(DifferentEvents.albumAssetAdded);
+                if(args[0] != null) {
+                    try{
+                        JSONObject json = new JSONObject(args[0].toString());
+                        String id = json.getString("albumAssetId");
+                        sendDataToActivityFromEvent(DifferentEvents.albumAssetAdded, id);
+                    } catch(Throwable e){
+                        Log.d(TAG, "Error parsing json albumAssetAdded");
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    Log.d(TAG, "albumAssetAdded args is null");
+                }
             }
         }).on("albumAssetUpdated", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                sendDataToActivityFromEvent(DifferentEvents.albumAssetUpdated);
+                if(args[0] != null) {
+                    try{
+                        JSONObject json = new JSONObject(args[0].toString());
+                        String id = json.getString("albumAssetId");
+                        sendDataToActivityFromEvent(DifferentEvents.albumAssetUpdated, id);
+                    } catch(Throwable e){
+                        Log.d(TAG, "Error parsing json albumAssetUpdated");
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    Log.d(TAG, "albumAssetUpdated args is null");
+                }
             }
         }).on("albumAssetRemoved", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                sendDataToActivityFromEvent(DifferentEvents.albumAssetRemoved);
+                if(args[0] != null) {
+                    try{
+                        JSONObject json = new JSONObject(args[0].toString());
+                        String id = json.getString("albumAssetId");
+                        sendDataToActivityFromEvent(DifferentEvents.albumAssetRemoved, id);
+                    } catch(Throwable e){
+                        Log.d(TAG, "Error parsing json albumAssetRemoved");
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    Log.d(TAG, "albumAssetRemoved args is null");
+                }
             }
         }).on("eventAdded", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                sendDataToActivityFromEvent(DifferentEvents.eventAdded);
+                if(args[0] != null) {
+                    try{
+                        JSONObject json = new JSONObject(args[0].toString());
+                        String id = json.getString("eventId");
+                        sendDataToActivityFromEvent(DifferentEvents.eventAdded, id);
+                    } catch(Throwable e){
+                        Log.d(TAG, "Error parsing json eventAdded");
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    Log.d(TAG, "evenAdded args is null");
+                }
             }
         }).on("eventUpdated", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                sendDataToActivityFromEvent(DifferentEvents.eventUpdated);
+                if(args[0] != null) {
+                    try{
+                        JSONObject json = new JSONObject(args[0].toString());
+                        String id = json.getString("eventId");
+                        sendDataToActivityFromEvent(DifferentEvents.eventUpdated, id);
+                    } catch(Throwable e){
+                        Log.d(TAG, "Error parsing json eventUpdated");
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    Log.d(TAG, "evenUpdated args is null");
+                }
             }
         }).on("eventRemoved", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                sendDataToActivityFromEvent(DifferentEvents.eventRemoved);
+                if(args[0] != null) {
+                    try{
+                        JSONObject json = new JSONObject(args[0].toString());
+                        String id = json.getString("eventId");
+                        sendDataToActivityFromEvent(DifferentEvents.eventRemoved, id);
+                    } catch(Throwable e){
+                        Log.d(TAG, "Error parsing json eventRemoved");
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    Log.d(TAG, "evenRemoved args is null");
+                }
             }
         }).on("callMissed", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                sendDataToActivityFromEvent(DifferentEvents.callMissed);
+                if(args[0] != null) {
+                    try{
+                        JSONObject json = new JSONObject(args[0].toString());
+                        String id = json.getString("callId");
+                        sendDataToActivityFromEvent(DifferentEvents.callMissed, id);
+                    } catch(Throwable e){
+                        Log.d(TAG, "Error parsing json callMissed");
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    Log.d(TAG, "callMissed args is null");
+                }
             }
         });
 

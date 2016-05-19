@@ -15,6 +15,7 @@ import com.grannyos.database.pojo.EventData;
 import com.grannyos.database.pojo.PhotoData;
 import com.grannyos.database.pojo.RelativesData;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -124,6 +125,22 @@ public class LoadDataFromDatabase {
         }
     }
 
+    //Constructor for update row
+
+    public LoadDataFromDatabase(Context context, String table, ContentValues updateValues, String updateId){
+        dbHelper = new DatabaseHelper(context, "database.db", null, 1);
+        db = dbHelper.getWritableDatabase();
+        updateTableById(table, updateValues, updateId);
+    }
+
+    //Constructor for delete file and row from database
+
+    public LoadDataFromDatabase(Context context, String table, String column, String rowImage, String deleteId){
+        dbHelper = new DatabaseHelper(context, "database.db", null, 1);
+        db = dbHelper.getWritableDatabase();
+        deleteFileRowById(table,column, deleteId, rowImage);
+    }
+
     private void saveRelatives(){
         db.beginTransaction();
         try {
@@ -193,7 +210,7 @@ public class LoadDataFromDatabase {
 
     private void getDataEvent(){
         eventData.clear();
-        cursor=db.rawQuery("select * from " + DatabaseHelper.TABLE_PHOTO + " asc limit 1;", null);
+        cursor=db.rawQuery("select * from " + DatabaseHelper.TABLE_PHOTO + " asc limit 1", null);
         if (cursor .moveToFirst()) {
             checkId=cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSET_ALBUM_ID));
             cursor.moveToNext();
@@ -255,18 +272,6 @@ public class LoadDataFromDatabase {
                 cursor.moveToNext();
             }
         }
-        /*String[] columns = new String[]{ DatabaseHelper.ALBUM_COVER, DatabaseHelper.ALBUM_COVER_TITLE, DatabaseHelper.ALBUM_ID};
-        cursor=db.query(DatabaseHelper.TABLE_ALBUM,columns,null,null,null,null,DatabaseHelper.ALBUM_COVER_TITLE + " COLLATE NOCASE ASC");
-        if (cursor .moveToFirst()) {
-            while (!cursor.isAfterLast()) {
-                //if(!myId.equals(cursor.getColumnIndex(DatabaseHelper.ALBUM_ID))) {
-                    AlbumData album = new AlbumData(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ALBUM_COVER)), cursor.getString(cursor.getColumnIndex(DatabaseHelper.ALBUM_COVER_TITLE)),
-                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.ALBUM_ID)));
-                    albumData.add(album);
-                //}
-                cursor.moveToNext();
-            }
-        }*/
         cursor.close();
         db.close();
         dbHelper.close();
@@ -296,5 +301,50 @@ public class LoadDataFromDatabase {
         cursor.close();
         db.close();
         dbHelper.close();
+    }
+
+    private void updateTableById(String table, ContentValues updateValues, String updateId){
+        db.beginTransaction();
+        try {
+            db.update(table, updateValues, "id = ?", new String[]{updateId});
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+        dbHelper.close();
+        db.close();
+    }
+
+    private boolean deleteFileRowById(String table, String column, String deleteId, String rowImage) {
+        String path;
+        String[] columns = new String[]{column};
+        Cursor c = db.query(table, columns, column + "=" + deleteId, null, null, null, null);
+        if (c != null) {
+            c.moveToFirst();
+            path = c.getString(c.getColumnIndex(rowImage));
+            c.close();
+        } else {
+            db.close();
+            dbHelper.close();
+            return false;
+        }
+        db.delete(table, column + "=?", new String[]{deleteId});
+        if (table.equals(DatabaseHelper.TABLE_ALBUM)) {
+            String[] photoColumn = new String[]{DatabaseHelper.ASSET_ALBUM_ID, DatabaseHelper.ASSET_RESOURCE};
+            Cursor cursor = db.query(DatabaseHelper.TABLE_PHOTO, photoColumn, DatabaseHelper.ASSET_ALBUM_ID + "=" + deleteId, null, null, null, null);
+            if (cursor.moveToFirst()) {
+                while (!cursor.isAfterLast()) {
+                    File deletePhoto = new File(cursor.getString(cursor.getColumnIndex("resource")));
+                    if (deletePhoto.exists())
+                        deletePhoto.delete();
+                    cursor.moveToNext();
+                }
+            }
+            cursor.close();
+        }
+        db.close();
+        dbHelper.close();
+        File deleteFile = new File(path);
+        return deleteFile.exists() && deleteFile.delete();
     }
 }

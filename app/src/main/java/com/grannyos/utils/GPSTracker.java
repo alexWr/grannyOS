@@ -21,7 +21,7 @@ import java.util.TimerTask;
 public class GPSTracker extends Service {
 
     private static final String TAG = "GPSTrackerGrannyOs";
-    private Timer               timer1;
+    private Timer               timer;
     private Context             mContext;
     private boolean             canGetLocation = false;
     private LocationManager     lm;
@@ -65,8 +65,8 @@ public class GPSTracker extends Service {
                 lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListenerNetwork);
             }
         }
-        timer1 = new Timer();
-        timer1.schedule(new GetLastLocation(), 20000);
+        timer = new Timer();
+        timer.schedule(new GetLastLocation(), 20000);
         return true;
     }
 
@@ -102,7 +102,7 @@ public class GPSTracker extends Service {
 
     LocationListener locationListenerGps = new LocationListener() {
         public void onLocationChanged(Location location) {
-            timer1.cancel();
+            timer.cancel();
             locationResult.gotLocation(location);
 
             lm.removeUpdates(this);
@@ -120,7 +120,7 @@ public class GPSTracker extends Service {
     };
     LocationListener locationListenerNetwork = new LocationListener() {
         public void onLocationChanged(Location location) {
-            timer1.cancel();
+            timer.cancel();
             locationResult.gotLocation(location);
 
             lm.removeUpdates(this);

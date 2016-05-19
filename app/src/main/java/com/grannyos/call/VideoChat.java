@@ -57,10 +57,10 @@ import io.socket.emitter.Emitter;
 public class VideoChat extends Activity {
 
 
+    private static final String                     TAG = "VideoChatGrannyOs";
     // Local preview screen position after call is connected.
     // Remote video screen position
 
-    private static final String                     TAG = "VideoChatGrannyOs";
     private static final int                        LOCAL_X_CONNECTED = 72;
     private static final int                        LOCAL_Y_CONNECTED = 72;
     private static final int                        LOCAL_WIDTH_CONNECTED = 25;

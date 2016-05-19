@@ -23,6 +23,8 @@ import android.widget.TextClock;
 import android.widget.TextView;
 
 import com.grannyos.call.IncomingCall;
+import com.grannyos.database.DatabaseHelper;
+import com.grannyos.database.LoadDataFromDatabase;
 import com.grannyos.login.GooglePlusLogin;
 import com.grannyos.login.LoginFragment;
 import com.grannyos.network.SocketService;
@@ -52,10 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences       sharedPreferences;
     private Intent                  socketService;
     private boolean                 startNotification;
-    private GetRelatives            getRelatives;
-    private GetCalendarEvent        getCalendarEvent;
-    private GetAlbum                getAlbum;
-    private GetAlbumAssets          getAlbumAssets;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,47 +191,65 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+
+            String id = intent.getStringExtra("gettingId");
             switch ((DifferentEvents)intent.getSerializableExtra("differentEvents")){
                 case albumAdded:
-
+                    new GetAlbum(MainActivity.this);
                     break;
+
                 case albumUpdated:
-
+                    new GetAlbum(MainActivity.this);
                     break;
+
                 case albumRemoved:
-
+                    new LoadDataFromDatabase(MainActivity.this, DatabaseHelper.TABLE_ALBUM,
+                            DatabaseHelper.ALBUM_ID, DatabaseHelper.ALBUM_COVER, id);
                     break;
+
                 case relativeAdded:
-                    getRelatives = new GetRelatives(MainActivity.this);
+                    new GetRelatives(MainActivity.this);
                     break;
 
                 case relativeUpdated:
-
+                    new GetRelatives(MainActivity.this);
                     break;
+
                 case relativeRemoved:
-
+                    new LoadDataFromDatabase(MainActivity.this, DatabaseHelper.TABLE_RELATIVES,
+                            DatabaseHelper.RELATIVES_ID, DatabaseHelper.RELATIVES_ICON, id);
                     break;
+
                 case albumAssetAdded:
-
+                    new GetAlbumAssets(MainActivity.this);
                     break;
+
                 case albumAssetUpdated:
-
+                    new GetAlbumAssets(MainActivity.this);
                     break;
+
                 case albumAssetRemoved:
-
+                    new LoadDataFromDatabase(MainActivity.this, DatabaseHelper.TABLE_PHOTO,
+                            DatabaseHelper.ASSET_ID, DatabaseHelper.ASSET_RESOURCE, id);
                     break;
+
                 case eventAdded:
-                    getCalendarEvent = new GetCalendarEvent(MainActivity.this);
+                    new GetCalendarEvent(MainActivity.this);
                     break;
+
                 case eventUpdated:
-
+                    new GetCalendarEvent(MainActivity.this);
                     break;
+
                 case eventRemoved:
-
+                    new LoadDataFromDatabase(MainActivity.this, DatabaseHelper.TABLE_PHOTO,
+                            DatabaseHelper.ASSET_ID, DatabaseHelper.ASSET_RESOURCE, id);
                     break;
+
                 case callMissed:
 
                     break;
+
                 default:
                     Log.d(TAG, "Error in receive events");
                     break;
