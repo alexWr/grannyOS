@@ -46,6 +46,7 @@ public class ListEvent extends Fragment{
         String month;
         String day;
         try {
+
             Date date = inputFormat.parse(LoadDataFromDatabase.getEventData().get(position).getCalendarDate());
             month = outputFormatMonth.format(date);
             day = outputFormatDay.format(date);

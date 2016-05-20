@@ -210,12 +210,7 @@ public class LoadDataFromDatabase {
 
     private void getDataEvent(){
         eventData.clear();
-        cursor=db.rawQuery("select * from " + DatabaseHelper.TABLE_PHOTO + " asc limit 1", null);
-        if (cursor .moveToFirst()) {
-            checkId=cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSET_ALBUM_ID));
-            cursor.moveToNext();
-        }
-        cursor.close();
+        albumResource.clear();
         cursor = db.query(DatabaseHelper.TABLE_EVENT, null, null, null, null, null, null);
         if (cursor .moveToFirst()) {
             while (!cursor.isAfterLast()) {
@@ -227,18 +222,14 @@ public class LoadDataFromDatabase {
             }
         }
         cursor.close();
-        String[] columnsAlbumId={DatabaseHelper.ASSET_ALBUM_ID, DatabaseHelper.ASSET_RESOURCE};
-        cursor = db.query(DatabaseHelper.TABLE_PHOTO, columnsAlbumId, null, null, null, null, null);
-        if (cursor .moveToFirst()) {
-            while (!cursor.isAfterLast()) {
-                if(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSET_ALBUM_ID)).equals(checkId)) {
-                    Log.d(TAG,"add event resource" + cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSET_RESOURCE)));
-                    albumResource.add(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSET_RESOURCE)));
-                }
-                cursor.moveToNext();
-            }
+        String[] columnsAlbumId={DatabaseHelper.ASSET_ID, DatabaseHelper.ASSET_RESOURCE};
+        for(int i=0; i<eventData.size(); i++){
+            cursor = db.query(DatabaseHelper.TABLE_PHOTO, columnsAlbumId, DatabaseHelper.ASSET_ID + "=?", new String[]{eventData.get(i).getAlbumAssetId()}, null, null, null);
+            cursor.moveToFirst();
+            albumResource.add(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSET_RESOURCE)));
+            Log.d(TAG,"add event resource" + cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSET_RESOURCE)));
+            cursor.close();
         }
-        cursor.close();
         db.close();
         dbHelper.close();
     }
