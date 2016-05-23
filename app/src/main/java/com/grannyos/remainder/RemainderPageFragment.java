@@ -15,6 +15,7 @@ import com.grannyos.R;
 import com.grannyos.ViewPagerAdapter;
 import com.grannyos.database.LoadDataFromDatabase;
 import com.grannyos.utils.HideViews;
+import com.grannyos.utils.ZoomOutPageTransformer;
 
 
 public class RemainderPageFragment extends Fragment implements View.OnClickListener{
@@ -46,6 +47,7 @@ public class RemainderPageFragment extends Fragment implements View.OnClickListe
         prevButton.setOnClickListener(this);
         nextButton.setOnClickListener(this);
         backButton.setOnClickListener(this);
+        remainderPager.setPageTransformer(true, new ZoomOutPageTransformer());
         try {
             new LoadDataFromDatabase("event", getActivity(), "");
             remainderPageAdapter = new ViewPagerAdapter(getActivity(), getChildFragmentManager(), RemainderList.class, 0);

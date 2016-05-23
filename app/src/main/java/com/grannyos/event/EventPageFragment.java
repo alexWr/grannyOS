@@ -15,6 +15,7 @@ import com.grannyos.R;
 import com.grannyos.ViewPagerAdapter;
 import com.grannyos.database.LoadDataFromDatabase;
 import com.grannyos.utils.HideViews;
+import com.grannyos.utils.ZoomOutPageTransformer;
 
 
 public class EventPageFragment extends Fragment implements View.OnClickListener{
@@ -42,6 +43,7 @@ public class EventPageFragment extends Fragment implements View.OnClickListener{
         prevButton.setOnClickListener(this);
         nextButton.setOnClickListener(this);
         backButton.setOnClickListener(this);
+        eventPager.setPageTransformer(true, new ZoomOutPageTransformer());
         try {
             new LoadDataFromDatabase("event", getActivity(), "");
             Log.d(TAG, "current event " + LoadDataFromDatabase.getEventData().size());

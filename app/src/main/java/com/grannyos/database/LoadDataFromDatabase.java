@@ -250,16 +250,14 @@ public class LoadDataFromDatabase {
         }
         cursor.close();
         String[] columns = new String[]{ DatabaseHelper.ALBUM_COVER, DatabaseHelper.ALBUM_COVER_TITLE, DatabaseHelper.ALBUM_ID};
-        cursor=db.query(DatabaseHelper.TABLE_ALBUM,columns,null,null,null,null,null);
+        cursor=db.query(DatabaseHelper.TABLE_ALBUM,columns,DatabaseHelper.ALBUM_ID + "!=?",new String[]{ myId },null,null,null);
         if (cursor .moveToFirst()) {
             while (!cursor.isAfterLast()) {
-                if(!myId.equals(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ALBUM_ID)))) {
-                    Log.d(TAG, "in the album " + cursor.getString(cursor.getColumnIndex(DatabaseHelper.ALBUM_COVER)) + " " +cursor.getString(cursor.getColumnIndex(DatabaseHelper.ALBUM_COVER_TITLE)) + " " +
-                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.ALBUM_ID)));
-                    AlbumData album = new AlbumData(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ALBUM_COVER)), cursor.getString(cursor.getColumnIndex(DatabaseHelper.ALBUM_COVER_TITLE)),
-                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.ALBUM_ID)));
-                    albumData.add(album);
-                }
+                Log.d(TAG, "in the album " + cursor.getString(cursor.getColumnIndex(DatabaseHelper.ALBUM_COVER)) + " " +cursor.getString(cursor.getColumnIndex(DatabaseHelper.ALBUM_COVER_TITLE)) + " " +
+                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.ALBUM_ID)));
+                AlbumData album = new AlbumData(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ALBUM_COVER)), cursor.getString(cursor.getColumnIndex(DatabaseHelper.ALBUM_COVER_TITLE)),
+                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.ALBUM_ID)));
+                albumData.add(album);
                 cursor.moveToNext();
             }
         }
@@ -270,22 +268,20 @@ public class LoadDataFromDatabase {
 
     private void getDataPhoto() {
         photoData.clear();
-        cursor = db.query(DatabaseHelper.TABLE_PHOTO, null, null, null, null, null, null);
+        cursor = db.query(DatabaseHelper.TABLE_PHOTO, null, DatabaseHelper.ASSET_ALBUM_ID + "=?", new String[]{ checkAlbumId }, null, null, null);
         Log.d(TAG, "cursor count " + cursor.getCount());
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
-                if (cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSET_ALBUM_ID)).equals(checkAlbumId)) {
-                    PhotoData photo = new PhotoData();
-                    if (cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSET_TITLE)) == null ||
-                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSET_TITLE)).equals("")) {
-                        photo.setAssetTitle("empty");
-                    } else {
-                        photo.setAssetTitle(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSET_TITLE)));
-                    }
-                    photo.setAssetResource(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSET_RESOURCE)));
-                    photo.setAssetType(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSET_TYPE)));
-                    photoData.add(photo);
+                PhotoData photo = new PhotoData();
+                if (cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSET_TITLE)) == null ||
+                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSET_TITLE)).equals("")) {
+                    photo.setAssetTitle("empty");
+                } else {
+                    photo.setAssetTitle(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSET_TITLE)));
                 }
+                photo.setAssetResource(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSET_RESOURCE)));
+                photo.setAssetType(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSET_TYPE)));
+                photoData.add(photo);
                 cursor.moveToNext();
             }
         }

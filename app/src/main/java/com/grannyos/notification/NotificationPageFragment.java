@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.grannyos.R;
 import com.grannyos.ViewPagerAdapter;
 import com.grannyos.utils.HideViews;
+import com.grannyos.utils.ZoomOutPageTransformer;
 
 
 public class NotificationPageFragment extends Fragment implements View.OnClickListener{
@@ -41,6 +42,7 @@ public class NotificationPageFragment extends Fragment implements View.OnClickLi
         prevButton.setOnClickListener(this);
         nextButton.setOnClickListener(this);
         okClose.setOnClickListener(this);
+        notificationPager.setPageTransformer(true, new ZoomOutPageTransformer());
         ViewPagerAdapter notificationPageAdapter = new ViewPagerAdapter(getActivity(), getChildFragmentManager(), ListNotification.class, 1);
         notificationPager.setAdapter(notificationPageAdapter);
         notificationPager.setCurrentItem(0);

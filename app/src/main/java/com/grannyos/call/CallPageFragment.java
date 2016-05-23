@@ -16,6 +16,7 @@ import com.grannyos.ViewPagerAdapter;
 import com.grannyos.database.LoadDataFromDatabase;
 import com.grannyos.network.SocketService;
 import com.grannyos.utils.HideViews;
+import com.grannyos.utils.ZoomOutPageTransformer;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -59,6 +60,7 @@ public class CallPageFragment extends Fragment implements View.OnClickListener{
         prevButton.setOnClickListener(this);
         nextButton.setOnClickListener(this);
         backButton.setOnClickListener(this);
+        callPager.setPageTransformer(true, new ZoomOutPageTransformer());
         if(SocketService.getSocket() != null && SocketService.getSocket().connected()) {
             getOnline();
         }

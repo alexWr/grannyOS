@@ -14,6 +14,7 @@ import com.grannyos.R;
 import com.grannyos.ViewPagerAdapter;
 import com.grannyos.database.LoadDataFromDatabase;
 import com.grannyos.utils.HideViews;
+import com.grannyos.utils.ZoomOutPageTransformer;
 
 
 public class AlbumPageFragment extends Fragment implements View.OnClickListener{
@@ -38,6 +39,7 @@ public class AlbumPageFragment extends Fragment implements View.OnClickListener{
         nextButton = (ImageView) rootView.findViewById(R.id.nextPage);
         previouslyPageDescription = (TextView) rootView.findViewById(R.id.previouslyPageDescription);
         nextPageDescription = (TextView) rootView.findViewById(R.id.nextPageDescription);
+        photoPager.setPageTransformer(true, new ZoomOutPageTransformer());
         new LoadDataFromDatabase("album", getActivity(), "");
         ViewPagerAdapter photoPagerAdapter = new ViewPagerAdapter(getActivity(), getChildFragmentManager(), AlbumList.class, LoadDataFromDatabase.getAlbumData().size());
         photoPager.setAdapter(photoPagerAdapter);

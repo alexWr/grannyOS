@@ -24,6 +24,7 @@ import com.grannyos.MainActivity;
 import com.grannyos.R;
 import com.grannyos.ViewPagerAdapter;
 import com.grannyos.database.LoadDataFromDatabase;
+import com.grannyos.utils.ZoomOutPageTransformer;
 
 
 public class PhotoPageFragment extends Fragment implements View.OnClickListener{
@@ -63,6 +64,7 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
         View rootView = inflater.inflate(R.layout.photo_page_layout, container, false);
         MainActivity.relativeLayout.setVisibility(View.GONE);
         checkAlbumId=getArguments().getString("albumId");
+        Log.d(TAG, "getting albumId " + checkAlbumId);
         photoAlbumPager=(ViewPager)rootView.findViewById(R.id.photoAlbumPager);
         Button backButton = (Button) rootView.findViewById(R.id.backButton);
         pbBatteryIndicator = (ProgressBar) rootView.findViewById(R.id.batteryIndicator);
@@ -75,6 +77,7 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
         ivNext.setOnClickListener(this);
         ivPrev.setOnClickListener(this);
         backButton.setOnClickListener(this);
+        photoAlbumPager.setPageTransformer(true, new ZoomOutPageTransformer());
         try {
             new LoadDataFromDatabase("photo", getActivity(), checkAlbumId);
             photoPageAdapter = new ViewPagerAdapter(getActivity(), getChildFragmentManager(), PhotoList.class, LoadDataFromDatabase.getPhotoData().size());
