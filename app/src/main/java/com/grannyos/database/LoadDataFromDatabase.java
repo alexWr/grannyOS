@@ -29,7 +29,6 @@ public class LoadDataFromDatabase {
     private DatabaseHelper                      dbHelper;
     private SQLiteDatabase                      db;
     private Cursor                              cursor;
-    private String                              checkId;
     private static ArrayList<RelativesData>     relativesData = new ArrayList<>();
     private static ArrayList<EventData>         eventData = new ArrayList<>();
     private static ArrayList<String>            albumResource = new ArrayList<>();
@@ -74,13 +73,6 @@ public class LoadDataFromDatabase {
             Log.d(TAG, "relatives data == null");
         }
         return photoData;
-    }
-
-    public static ArrayList<String> getOnlineData(){
-        if(online == null){
-            Log.d(TAG, "relatives data == null");
-        }
-        return online;
     }
 
 
@@ -191,7 +183,6 @@ public class LoadDataFromDatabase {
 
 
     private void getDataRelatives(){
-        online.clear();
         relativesData.clear();
         String[] columns = new String[]{ DatabaseHelper.RELATIVES_FIRST_NAME, DatabaseHelper.RELATIVES_LAST_NAME, DatabaseHelper.RELATIVES_ICON, DatabaseHelper.RELATIVES_ID};
         cursor=db.query(DatabaseHelper.TABLE_RELATIVES,columns,null,null,null,null, DatabaseHelper.RELATIVES_FIRST_NAME + " COLLATE NOCASE ASC");
@@ -235,22 +226,12 @@ public class LoadDataFromDatabase {
     }
 
     private void getDataAlbum(){
-        String checkId;
+
         albumData.clear();
         String myId = sharedPreferences.getString("myId","");
         Log.d(TAG, "my own id " + sharedPreferences.getString("myId", ""));
-        cursor=db.rawQuery("select * from " + DatabaseHelper.TABLE_PHOTO + " asc limit 1", null);
-        if (cursor.moveToFirst()) {
-            while (!cursor.isAfterLast()) {
-                checkId=cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSET_ALBUM_ID));
-                Log.d(TAG, "checkId " + checkId);
-                cursor.moveToNext();
-                break;
-            }
-        }
-        cursor.close();
         String[] columns = new String[]{ DatabaseHelper.ALBUM_COVER, DatabaseHelper.ALBUM_COVER_TITLE, DatabaseHelper.ALBUM_ID};
-        cursor=db.query(DatabaseHelper.TABLE_ALBUM,columns,DatabaseHelper.ALBUM_ID + "!=?",new String[]{ myId },null,null,null);
+        cursor=db.query(DatabaseHelper.TABLE_ALBUM,columns,DatabaseHelper.ALBUM_ID + "<>?",new String[]{ myId },null,null,null);
         if (cursor .moveToFirst()) {
             while (!cursor.isAfterLast()) {
                 Log.d(TAG, "in the album " + cursor.getString(cursor.getColumnIndex(DatabaseHelper.ALBUM_COVER)) + " " +cursor.getString(cursor.getColumnIndex(DatabaseHelper.ALBUM_COVER_TITLE)) + " " +
@@ -318,7 +299,7 @@ public class LoadDataFromDatabase {
         db.delete(table, column + "=?", new String[]{deleteId});
         if (table.equals(DatabaseHelper.TABLE_ALBUM)) {
             String[] photoColumn = new String[]{DatabaseHelper.ASSET_ALBUM_ID, DatabaseHelper.ASSET_RESOURCE};
-            Cursor cursor = db.query(DatabaseHelper.TABLE_PHOTO, photoColumn, DatabaseHelper.ASSET_ALBUM_ID + "=" + deleteId, null, null, null, null);
+            Cursor cursor = db.query(DatabaseHelper.TABLE_PHOTO, photoColumn, DatabaseHelper.ASSET_ALBUM_ID + "=?", new String[]{ deleteId}, null, null, null);
             if (cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
                     File deletePhoto = new File(cursor.getString(cursor.getColumnIndex("resource")));

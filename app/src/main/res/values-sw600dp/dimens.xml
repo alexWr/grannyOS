@@ -30,7 +30,7 @@
     <!-- Margin in other view -->
 
     <dimen name="marginTopProgress">14dp</dimen>
-    <dimen name="marginTopOnline">80dp</dimen>
+    <dimen name="marginTopOnline">75dp</dimen>
     <dimen name="marginTopWeather">80dp</dimen>
     <dimen name="marginStartDescription">225dp</dimen>
     <dimen name="marginEndDescription">225dp</dimen>

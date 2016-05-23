@@ -62,7 +62,6 @@ public class GetAlbumAssets {
                 @Override
                 public void success(final List<ResponseRest.albumListResponse> albumListResponses, Response response) {
 
-
                     for (int i = 0; i < albumListResponses.size(); i++) {
                         final ResponseRest.albumListResponse album = albumListResponses.get(i);
 
@@ -73,6 +72,12 @@ public class GetAlbumAssets {
                             Request request = new Request.Builder()
                                     .url(asset.getResource())
                                     .build();
+                            try{
+                                Thread.sleep(100);
+                            } catch(InterruptedException e){
+                                Log.d(TAG, "Error while thread sleep");
+                                e.printStackTrace();
+                            }
                             okHttp.newCall(request).enqueue(new com.squareup.okhttp.Callback() {
                                 @Override
                                 public void onFailure(Request request, IOException e) {
@@ -81,6 +86,7 @@ public class GetAlbumAssets {
 
                                 @Override
                                 public void onResponse(com.squareup.okhttp.Response response) throws IOException {
+
                                     if (!response.isSuccessful())
                                         throw new IOException("Unexpected code " + response);
 
