@@ -159,9 +159,6 @@ public class MainActivity extends AppCompatActivity {
         if(SocketService.getSocket()!=null && SocketService.getSocket().connected()){
             SocketService.getSocket().disconnect();
         }
-        if(socketService!=null) {
-            stopService(socketService);
-        }
     }
 
     @Override

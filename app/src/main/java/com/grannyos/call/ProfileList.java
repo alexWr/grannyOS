@@ -15,36 +15,28 @@ import android.widget.TextView;
 import com.grannyos.R;
 import com.grannyos.database.LoadDataFromDatabase;
 import com.grannyos.database.pojo.RelativesData;
-import com.grannyos.network.SocketService;
 import com.grannyos.utils.DecodeBitmap;
 
 import java.io.File;
 import java.util.ArrayList;
-
-import io.socket.emitter.Emitter;
 
 
 /**
  * Fragment show the list of all relatives
  */
 
-public class ProfileList extends Fragment implements View.OnClickListener{
+public class ProfileList extends Fragment{
 
 
     private static final String         TAG = "ProfileListGrannyOs";
-    private int                         position =0;
-    private DecodeBitmap                decodeBitmap=new DecodeBitmap();
-    private ImageView                   onlineOffline;
-    private RelativeLayout              callToRegion;
+    private int                         position = 0;
+    private DecodeBitmap                decodeBitmap = new DecodeBitmap();
+    private static ImageView            onlineOffline;
+    private static RelativeLayout       callToRegion;
     private Activity                    activity;
-    private TextView                    tvHelpDescription;
     private String                      relativeId;
-    private String                      firstName;
-    private String                      lastName;
-    private ImageView                   arrow;
-    private String                      textOffline;
-    private String                      textOnline;
     private ArrayList<RelativesData>    relativesData = new ArrayList<>();
+    public static TextView              firstLastName;
 
 
     @Override
@@ -52,8 +44,7 @@ public class ProfileList extends Fragment implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         position = getArguments().getInt("page");
         activity = getActivity();
-        arrow = CallPageFragment.arrow;
-        arrow.setVisibility(View.INVISIBLE);
+        Log.d(TAG, "page position" + position);
     }
 
     @Override
@@ -62,20 +53,12 @@ public class ProfileList extends Fragment implements View.OnClickListener{
         callToRegion = (RelativeLayout) rootView.findViewById(R.id.callToRegion);
         ImageView mainProfileIcon = (ImageView) rootView.findViewById(R.id.mainProfileIcon);
         onlineOffline = (ImageView) rootView.findViewById(R.id.onlineOffline);
-        TextView firstLastName = (TextView) rootView.findViewById(R.id.firstLastName);
-        tvHelpDescription = (TextView) rootView.findViewById(R.id.helpDescription);
-        if(CallPageFragment.online.size() == 0 ){
-            new LoadDataFromDatabase("relatives", getActivity(), "");
-        }
+        firstLastName = (TextView) rootView.findViewById(R.id.firstLastName);
         relativesData = LoadDataFromDatabase.getRelativeData();
         try {
             if (relativesData.size() != 0) {
                 relativeId = relativesData.get(position).getRelativesId();
-                firstName = relativesData.get(position).getFirstName();
-                lastName = relativesData.get(position).getLastName();
-                firstLastName.setText(firstName + " " + lastName);
-                textOnline = "To call " + firstName + " " + lastName + " tap here";
-                textOffline = "You can't call " + firstName + " " + lastName + " because relative offline";
+                firstLastName.setText(relativesData.get(position).getFirstName() + " " + relativesData.get(position).getLastName());
                 if (!relativesData.get(position).getAvatar().equals("none")) {
                     File imgFile = new File(relativesData.get(position).getAvatar());
                     if (imgFile.exists()) {
@@ -86,116 +69,62 @@ public class ProfileList extends Fragment implements View.OnClickListener{
                     mainProfileIcon.setImageResource(R.drawable.default_avatar);
             }
             else{
-                arrow.setVisibility(View.INVISIBLE);
-                tvHelpDescription.setVisibility(View.INVISIBLE);
                 onlineOffline.setVisibility(View.INVISIBLE);
             }
         } catch (Exception e){
             Log.d(TAG, "Something went wrong in ProfileList");
         }
         if(CallPageFragment.online.size()==0){
-            changeUIOnlineOffline(R.drawable.offline, View.INVISIBLE, false, textOffline);
+            changeUIOnlineOffline(R.drawable.offline, false);
         }
         else {
             for(int i = 0; i< CallPageFragment.online.size(); i++) {
                 if (CallPageFragment.online.get(i).equals(relativeId)) {
-                    changeUIOnlineOffline(R.drawable.online, View.VISIBLE, true, textOnline);
+                    changeUIOnlineOffline(R.drawable.online, true);
                 }
-                else {
-                    changeUIOnlineOffline(R.drawable.offline, View.INVISIBLE, false, textOffline);
-                }
+                else
+                    changeUIOnlineOffline(R.drawable.offline, false);
             }
         }
         return rootView;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        online();
-        offline();
-    }
 
-    @Override
-    public void onClick(View v) {
-        CallPageFragment.currentPosition = position;
-        Log.d(TAG, "save currentPosition " + CallPageFragment.currentPosition);
-        Bundle bundle = new Bundle();
-        bundle.putString("firstName", firstName);
-        bundle.putString("lastName", lastName);
-        bundle.putString("avatar", relativesData.get(position).getAvatar());
-        bundle.putString("id", relativeId);
-        Fragment fragment = new CallToFragment();
-        fragment.setArguments(bundle);
-        FragmentManager fragmentManager = activity.getFragmentManager();
-        fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.content_frame, fragment).commit();
-    }
+    public class OnClickListenerProfileList implements View.OnClickListener {
 
-    private void online(){
-        if (SocketService.getSocket() != null)
-            SocketService.getSocket().on("online", new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    Log.d(TAG, "online " + args[0] + "relativeId " + relativeId);
-                    if(args[0].equals(relativeId)) {
-                        activity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Log.d(TAG, "online ");
-                                changeUIOnlineOffline(R.drawable.online, View.VISIBLE, true, textOnline);
-                            }
-                        });
-                    }
-                }
-            });
-        else{
-            Log.e(TAG, "Socket is null in someone online");
+        @Override
+        public void onClick(View v) {
+            CallPageFragment.currentPosition = position;
+            Log.d(TAG, "save currentPosition " + CallPageFragment.currentPosition);
+            Bundle bundle = new Bundle();
+            bundle.putString("firstName", relativesData.get(position).getFirstName());
+            bundle.putString("lastName", relativesData.get(position).getLastName());
+            bundle.putString("avatar", relativesData.get(position).getAvatar());
+            bundle.putString("id", relativeId);
+            Fragment fragment = new CallToFragment();
+            fragment.setArguments(bundle);
+            FragmentManager fragmentManager = activity.getFragmentManager();
+            fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.content_frame, fragment).commit();
         }
     }
 
-    private void offline() {
-        if(SocketService.getSocket() != null) {
-            SocketService.getSocket().on("offline", new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    Log.d(TAG, "offline " + args[0] + "relativeId " + relativesData.get(position).getRelativesId());
-                    if(args[0].equals(relativeId)) {
-                        activity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Log.d(TAG, "offline");
-                                changeUIOnlineOffline(R.drawable.offline, View.INVISIBLE, false, textOffline);
-                            }
-                        });
-                    }
-                }
-            });
+
+    public void changeUIOnlineOffline(int resId, boolean clickListener){
+        if(onlineOffline != null) {
+            onlineOffline.setImageResource(resId);
         }
         else{
-            Log.e(TAG, "Socket is null in offline");
+            Log.d(TAG, "change on ui online offline == null");
         }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if(SocketService.getSocket() != null) {
-            SocketService.getSocket().off("online");
-            SocketService.getSocket().off("offline");
-        }
-    }
-
-
-    public void changeUIOnlineOffline(int resId, int visibility, boolean clickListener, String setText){
-
-        onlineOffline.setImageResource(resId);
-        if(clickListener){
-            callToRegion.setOnClickListener(ProfileList.this);
+        if(callToRegion != null) {
+            if (clickListener) {
+                callToRegion.setOnClickListener(new OnClickListenerProfileList());
+            } else {
+                callToRegion.setOnClickListener(null);
+            }
         }
         else{
-            callToRegion.setOnClickListener(null);
+            Log.d(TAG, "change on ui online offline call to region == null");
         }
-        arrow.setVisibility(visibility);
-        tvHelpDescription.setText(setText);
     }
 }

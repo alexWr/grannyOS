@@ -28,7 +28,7 @@ public class ViewPagerAdapter  extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         Bundle bundle = new Bundle();
         bundle.putInt("page", position);
-        return Fragment.instantiate(context, fragmentName.getName(), bundle); //fragmentInstance.newInstance(position);
+        return Fragment.instantiate(context, fragmentName.getName(), bundle);
     }
 
     @Override

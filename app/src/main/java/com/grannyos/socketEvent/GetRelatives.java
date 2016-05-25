@@ -89,10 +89,6 @@ public class GetRelatives {
                                     if (!response.isSuccessful())
                                         throw new IOException("Unexpected code " + response);
 
-                                    Headers responseHeaders = response.headers();
-                                    for (int i = 0; i < responseHeaders.size(); i++) {
-                                        System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
-                                    }
                                     String mimeType = MimeTypeMap.getFileExtensionFromUrl(avatarURL);
                                     String fname = "Relative" + relative.relativesId + "." + mimeType;
                                     File saveFile = new File(myDir, fname);

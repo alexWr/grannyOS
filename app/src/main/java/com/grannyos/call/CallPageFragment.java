@@ -1,5 +1,6 @@
 package com.grannyos.call;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -14,16 +15,19 @@ import android.widget.TextView;
 import com.grannyos.R;
 import com.grannyos.ViewPagerAdapter;
 import com.grannyos.database.LoadDataFromDatabase;
+import com.grannyos.database.pojo.RelativesData;
 import com.grannyos.network.SocketService;
 import com.grannyos.utils.HideViews;
 import com.grannyos.utils.ZoomOutPageTransformer;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import io.socket.client.Ack;
+import io.socket.emitter.Emitter;
 
 /**
  * Fragment is appear when user press list of relatives
@@ -32,19 +36,32 @@ import io.socket.client.Ack;
 public class CallPageFragment extends Fragment implements View.OnClickListener{
 
 
-    private static final String     TAG = "CallPagerGrannyOs";
-    private ViewPager               callPager;
-    public static int               currentPosition = 0;
-    private ImageView               nextButton;
-    private ImageView               prevButton;
-    private ChangeListener          mListener = new ChangeListener();
-    public static ArrayList<String> online = new ArrayList<>();
-    public static ImageView         arrow;
-    private TextView                previouslyPageDescription;
-    private TextView                nextPageDescription;
-    private HideViews               hideViews;
+    private static final String         TAG = "CallPagerGrannyOs";
+    private ViewPager                   callPager;
+    public static int                   currentPosition = 0;
+    private ImageView                   nextButton;
+    private ImageView                   prevButton;
+    private ChangeListener              mListener = new ChangeListener();
+    public static ArrayList<String>     online = new ArrayList<>();
+    public static ImageView             arrow;
+    private TextView                    tvHelpDescription;
+    private TextView                    previouslyPageDescription;
+    private TextView                    nextPageDescription;
+    private HideViews                   hideViews;
+    private String                      relativeId;
+    private String                      firstName;
+    private String                      lastName;
+    private String                      textOffline;
+    private String                      textOnline;
+    private ArrayList<RelativesData>    relativesData;
+    private Activity                    activity;
 
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        activity = getActivity();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -54,19 +71,25 @@ public class CallPageFragment extends Fragment implements View.OnClickListener{
         prevButton = (ImageView) rootView.findViewById(R.id.previousPage);
         nextButton = (ImageView) rootView.findViewById(R.id.nextPage);
         arrow = (ImageView) rootView.findViewById(R.id.arrow);
-        arrow.setVisibility(View.INVISIBLE);
+        tvHelpDescription = (TextView) rootView.findViewById(R.id.helpDescription);
         previouslyPageDescription = (TextView) rootView.findViewById(R.id.previouslyPageDescription);
         nextPageDescription = (TextView) rootView.findViewById(R.id.nextPageDescription);
         prevButton.setOnClickListener(this);
         nextButton.setOnClickListener(this);
         backButton.setOnClickListener(this);
         callPager.setPageTransformer(true, new ZoomOutPageTransformer());
+        try {
+            new LoadDataFromDatabase("relatives", getActivity(), "");
+        } catch(Exception e){
+            Log.d(TAG, "Error while get relatives");
+            e.printStackTrace();
+        }
+        relativesData = LoadDataFromDatabase.getRelativeData();
         if(SocketService.getSocket() != null && SocketService.getSocket().connected()) {
             getOnline();
         }
         else {
             Log.e(TAG, "Socket == null");
-            new LoadDataFromDatabase("relatives", getActivity(), "");
             setAdapter();
         }
         return rootView;
@@ -103,6 +126,8 @@ public class CallPageFragment extends Fragment implements View.OnClickListener{
         public void onPageScrollStateChanged(int state) {
             if (state == ViewPager.SCROLL_STATE_IDLE) {
                 hideViews.visibility(prevButton, previouslyPageDescription, nextButton, nextPageDescription);
+                getInfo();
+                checkRelativesOnline();
             }
         }
     }
@@ -114,6 +139,10 @@ public class CallPageFragment extends Fragment implements View.OnClickListener{
             callPager.setAdapter(callPagerAdapter);
             callPager.setCurrentItem(currentPosition);
             callPager.addOnPageChangeListener(mListener);
+            getInfo();
+            checkRelativesOnline();
+            online();
+            offline();
             hideViews = new HideViews(callPager);
             hideViews.visibility(prevButton, previouslyPageDescription, nextButton, nextPageDescription);
         }catch (Exception e){
@@ -121,6 +150,21 @@ public class CallPageFragment extends Fragment implements View.OnClickListener{
             Log.d(TAG, "Error in CallPageFragment while set adapter");
         }
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(SocketService.getSocket() != null) {
+            SocketService.getSocket().off("online");
+            SocketService.getSocket().off("offline");
+        }
+    }
+
+    /**
+     * All method for online/offline relatives
+     * Register socket IO listener for online/offline relatives
+     */
+
 
     private void getOnline(){
         try {
@@ -136,8 +180,7 @@ public class CallPageFragment extends Fragment implements View.OnClickListener{
                             Log.d(TAG, "relativeId " + json.getString("relativeId"));
                             online.add(json.getString("relativeId"));
                         }
-                        new LoadDataFromDatabase("relatives", getActivity(), "");
-                        getActivity().runOnUiThread(new Runnable() {
+                        activity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 setAdapter();
@@ -152,5 +195,112 @@ public class CallPageFragment extends Fragment implements View.OnClickListener{
         catch (Throwable e) {
             Log.d(TAG, "WTF????!!!!", e);
         }
+    }
+
+    private void online(){
+        if (SocketService.getSocket() != null) {
+            SocketService.getSocket().on("online", new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    Log.d(TAG, "online " + args[0] + "relativeId " + relativeId);
+                    String relative= "";
+                    if(args[0] != null) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(args[0].toString());
+                            relative = jsonObject.getString("relativeId");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        online.add(relative);
+                        if (relative.equals(relativeId)) {
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.d(TAG, "online");
+                                    changeUIOnlineOffline(View.VISIBLE, textOnline);
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+        }
+        else{
+            Log.e(TAG, "Socket is null in someone online");
+        }
+    }
+
+    private void offline() {
+        if(SocketService.getSocket() != null) {
+            SocketService.getSocket().on("offline", new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    Log.d(TAG, "offline " + args[0] + "relativeId " + relativeId);
+                    String relative= "";
+                    if(args[0] != null) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(args[0].toString());
+                            relative = jsonObject.getString("relativeId");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        online.remove(relative);
+                        if (relative.equals(relativeId)) {
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.d(TAG, "offline");
+                                    changeUIOnlineOffline(View.INVISIBLE, textOffline);
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+        }
+        else{
+            Log.e(TAG, "Socket is null in offline");
+        }
+    }
+
+    private void checkRelativesOnline(){
+        if(online.size()!=0){
+            for(int i = 0; i< online.size(); i++) {
+                if (online.get(i).equals(LoadDataFromDatabase.getRelativeData().get(callPager.getCurrentItem()).getRelativesId()) ) {
+                    changeUIOnlineOffline(View.VISIBLE, textOnline);
+                }
+                else
+                    changeUIOnlineOffline(View.INVISIBLE, textOffline);
+            }
+        }
+        else{
+            changeUIOnlineOffline(View.INVISIBLE, textOffline);
+        }
+    }
+
+    private void getInfo(){
+        if(relativesData.size() != 0){
+            relativeId = relativesData.get(callPager.getCurrentItem()).getRelativesId();
+            firstName = relativesData.get(callPager.getCurrentItem()).getFirstName();
+            lastName = relativesData.get(callPager.getCurrentItem()).getLastName();
+            textOnline = "To call " + firstName + " " + lastName + " tap here";
+            textOffline = "You can't call " + firstName + " " + lastName + " because relative offline";
+        }
+        else{
+            textOnline = "Cann't find someone";
+            textOffline = "Cann't find someone";
+        }
+    }
+
+    public void changeUIOnlineOffline(int visibility, String setText){
+        ProfileList profileList = new ProfileList();
+        if(visibility == View.VISIBLE) {
+            profileList.changeUIOnlineOffline(R.drawable.online, true);
+        }
+        else{
+            profileList.changeUIOnlineOffline(R.drawable.offline, false);
+        }
+        arrow.setVisibility(visibility);
+        tvHelpDescription.setText(setText);
     }
 }

@@ -65,19 +65,4 @@
             android:textStyle="bold"
             android:textSize="@dimen/textSizeLarge"/>
     </RelativeLayout>
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/btnPhotoHeight"
-        android:id="@+id/helpDescription"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/description_photo"
-        android:layout_marginBottom="@dimen/marginBottomSmall"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="@dimen/marginStartDescription"
-        android:layout_marginEnd="@dimen/marginEndDescription"
-        android:textColor="@color/black"
-        android:gravity="center"
-        android:textSize="@dimen/textSize"
-        android:paddingStart="@dimen/marginStartSmall"
-        android:paddingEnd="@dimen/marginEndSmall"/>
 </RelativeLayout>

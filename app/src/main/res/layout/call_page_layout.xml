@@ -48,6 +48,7 @@
         android:layout_alignParentBottom="true"
         android:textColor="@color/black"
         android:layout_marginStart="@dimen/marginStartSmall"
+        android:layout_marginEnd="@dimen/marginEndSmall"
         android:layout_marginBottom="@dimen/marginBottom"
         android:text="@string/prev"/>
 
@@ -69,7 +70,23 @@
         android:textSize="@dimen/textSize"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="@dimen/marginEndSmall"
+        android:layout_marginStart="@dimen/marginStartSmall"
         android:layout_marginBottom="@dimen/marginBottom"
         android:textColor="@color/black"
         android:text="@string/next"/>
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/btnPhotoHeight"
+        android:id="@+id/helpDescription"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/description_photo"
+        android:layout_marginBottom="@dimen/marginBottomSmall"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/previouslyPageDescription"
+        android:layout_toStartOf="@+id/nextPageDescription"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:textSize="@dimen/textSize"
+        android:paddingStart="@dimen/marginStartSmall"
+        android:paddingEnd="@dimen/marginEndSmall"/>
 </RelativeLayout>

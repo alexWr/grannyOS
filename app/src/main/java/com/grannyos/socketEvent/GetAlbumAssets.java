@@ -14,7 +14,6 @@ import com.grannyos.database.DatabaseHelper;
 import com.grannyos.database.LoadDataFromDatabase;
 import com.grannyos.network.ResponseRest;
 import com.grannyos.network.RestInterface;
-import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 
@@ -90,10 +89,7 @@ public class GetAlbumAssets {
                                     if (!response.isSuccessful())
                                         throw new IOException("Unexpected code " + response);
 
-                                    Headers responseHeaders = response.headers();
-                                    for (int i = 0; i < responseHeaders.size(); i++) {
-                                        System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
-                                    }
+
                                     String mimeType = MimeTypeMap.getFileExtensionFromUrl(asset.getResource());
                                     String fname;
                                     switch (asset.getType()) {

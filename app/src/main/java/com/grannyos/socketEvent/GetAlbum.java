@@ -77,10 +77,6 @@ public class GetAlbum {
                                     if (!response.isSuccessful())
                                         throw new IOException("Unexpected code " + response);
 
-                                    Headers responseHeaders = response.headers();
-                                    for (int i = 0; i < responseHeaders.size(); i++) {
-                                        System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
-                                    }
                                     String mimeType = MimeTypeMap.getFileExtensionFromUrl(album.getCover());
                                     String fname = "Cover" + album.getAlbumId() + "." + mimeType;
 
