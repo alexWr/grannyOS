@@ -25,14 +25,14 @@ import java.util.ArrayList;
  * Fragment show the list of all relatives
  */
 
-public class ProfileList extends Fragment{
+public class ProfileList extends Fragment implements OnlineOfflineListener{
 
 
     private static final String         TAG = "ProfileListGrannyOs";
     private int                         position = 0;
     private DecodeBitmap                decodeBitmap = new DecodeBitmap();
-    private static ImageView            onlineOffline;
-    private static RelativeLayout       callToRegion;
+    private ImageView            onlineOffline;
+    private RelativeLayout       callToRegion;
     private Activity                    activity;
     private String                      relativeId;
     private ArrayList<RelativesData>    relativesData = new ArrayList<>();
@@ -74,21 +74,30 @@ public class ProfileList extends Fragment{
         } catch (Exception e){
             Log.d(TAG, "Something went wrong in ProfileList");
         }
+        new CallPageFragment().setOnlineListener(this);
+        return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
         if(CallPageFragment.online.size()==0){
             changeUIOnlineOffline(R.drawable.offline, false);
         }
         else {
             for(int i = 0; i< CallPageFragment.online.size(); i++) {
                 if (CallPageFragment.online.get(i).equals(relativeId)) {
+                    Log.d(TAG, "changeUIOnlineOffline in for if");
                     changeUIOnlineOffline(R.drawable.online, true);
                 }
-                else
+                else {
+                    Log.d(TAG, "changeUIOnlineOffline in for else");
                     changeUIOnlineOffline(R.drawable.offline, false);
+                }
             }
         }
-        return rootView;
     }
-
 
     public class OnClickListenerProfileList implements View.OnClickListener {
 
@@ -108,15 +117,24 @@ public class ProfileList extends Fragment{
         }
     }
 
+    @Override
+    public void relativesOnlineOffline(boolean onlineOffline, String id) {
+        if(onlineOffline)
+            changeUIOnlineOffline(R.drawable.online, true);
+        else
+            changeUIOnlineOffline(R.drawable.offline, false);
+    }
 
     public void changeUIOnlineOffline(int resId, boolean clickListener){
         if(onlineOffline != null) {
+            Log.d(TAG, "onlineOffline != null");
             onlineOffline.setImageResource(resId);
         }
         else{
             Log.d(TAG, "change on ui online offline == null");
         }
         if(callToRegion != null) {
+            Log.d(TAG, "callToRegion != null");
             if (clickListener) {
                 callToRegion.setOnClickListener(new OnClickListenerProfileList());
             } else {

@@ -33,7 +33,7 @@ import io.socket.emitter.Emitter;
  * Fragment is appear when user press list of relatives
  */
 
-public class CallPageFragment extends Fragment implements View.OnClickListener{
+public class CallPageFragment extends Fragment implements View.OnClickListener, OnlineOfflineListener{
 
 
     private static final String         TAG = "CallPagerGrannyOs";
@@ -55,6 +55,8 @@ public class CallPageFragment extends Fragment implements View.OnClickListener{
     private String                      textOnline;
     private ArrayList<RelativesData>    relativesData;
     private Activity                    activity;
+    private OnlineOfflineListener       onlineOfflineListener = this;
+    private OnlineOfflineListener       profileListListener;
 
 
     @Override
@@ -108,6 +110,14 @@ public class CallPageFragment extends Fragment implements View.OnClickListener{
                 currentPosition=0;
                 getActivity().onBackPressed();
                 break;
+        }
+    }
+
+    @Override
+    public void relativesOnlineOffline(boolean onlineOffline, String id) {
+        Log.d(TAG, "online/offline listener " + onlineOffline + " id: " + id);
+        if(profileListListener != null){
+            profileListListener.relativesOnlineOffline(onlineOffline, id);
         }
     }
 
@@ -179,6 +189,7 @@ public class CallPageFragment extends Fragment implements View.OnClickListener{
                             JSONObject json = array.getJSONObject(i);
                             Log.d(TAG, "relativeId " + json.getString("relativeId"));
                             online.add(json.getString("relativeId"));
+                            onlineOfflineListener.relativesOnlineOffline(true, json.getString("relativeId"));
                         }
                         activity.runOnUiThread(new Runnable() {
                             @Override
@@ -211,7 +222,9 @@ public class CallPageFragment extends Fragment implements View.OnClickListener{
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        online.add(relative);
+                        if(!online.contains(relative))
+                            online.add(relative);
+                        onlineOfflineListener.relativesOnlineOffline(true, relative);
                         if (relative.equals(relativeId)) {
                             activity.runOnUiThread(new Runnable() {
                                 @Override
@@ -244,7 +257,9 @@ public class CallPageFragment extends Fragment implements View.OnClickListener{
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        online.remove(relative);
+                        if(online.contains(relative))
+                            online.remove(relative);
+                        onlineOfflineListener.relativesOnlineOffline(false, relative);
                         if (relative.equals(relativeId)) {
                             activity.runOnUiThread(new Runnable() {
                                 @Override
@@ -267,13 +282,20 @@ public class CallPageFragment extends Fragment implements View.OnClickListener{
         if(online.size()!=0){
             for(int i = 0; i< online.size(); i++) {
                 if (online.get(i).equals(LoadDataFromDatabase.getRelativeData().get(callPager.getCurrentItem()).getRelativesId()) ) {
+                    Log.d(TAG, "changeUIOnlineOffline in for if");
                     changeUIOnlineOffline(View.VISIBLE, textOnline);
+                    onlineOfflineListener.relativesOnlineOffline(true, relativesData.get(callPager.getCurrentItem()).getRelativesId());
                 }
-                else
+                else {
+                    Log.d(TAG, "changeUIOnlineOffline in for else");
                     changeUIOnlineOffline(View.INVISIBLE, textOffline);
+                    onlineOfflineListener.relativesOnlineOffline(false, relativesData.get(callPager.getCurrentItem()).getRelativesId());
+                }
             }
         }
         else{
+            Log.d(TAG, "changeUIOnlineOffline checkRelatives online else");
+            onlineOfflineListener.relativesOnlineOffline(false, relativesData.get(callPager.getCurrentItem()).getRelativesId());
             changeUIOnlineOffline(View.INVISIBLE, textOffline);
         }
     }
@@ -293,14 +315,11 @@ public class CallPageFragment extends Fragment implements View.OnClickListener{
     }
 
     public void changeUIOnlineOffline(int visibility, String setText){
-        ProfileList profileList = new ProfileList();
-        if(visibility == View.VISIBLE) {
-            profileList.changeUIOnlineOffline(R.drawable.online, true);
-        }
-        else{
-            profileList.changeUIOnlineOffline(R.drawable.offline, false);
-        }
         arrow.setVisibility(visibility);
         tvHelpDescription.setText(setText);
+    }
+
+    public void setOnlineListener(OnlineOfflineListener listener){
+        this.profileListListener = listener;
     }
 }
