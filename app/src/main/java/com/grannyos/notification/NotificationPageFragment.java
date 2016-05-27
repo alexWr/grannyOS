@@ -38,7 +38,6 @@ public class NotificationPageFragment extends Fragment implements View.OnClickLi
         nextButton = (ImageView) rootView.findViewById(R.id.nextPage);
         previouslyPageDescription = (TextView) rootView.findViewById(R.id.previouslyPageDescription);
         nextPageDescription = (TextView) rootView.findViewById(R.id.nextPageDescription);
-        hideViews = new HideViews(notificationPager);
         prevButton.setOnClickListener(this);
         nextButton.setOnClickListener(this);
         okClose.setOnClickListener(this);
@@ -47,6 +46,7 @@ public class NotificationPageFragment extends Fragment implements View.OnClickLi
         notificationPager.setAdapter(notificationPageAdapter);
         notificationPager.setCurrentItem(0);
         notificationPager.addOnPageChangeListener(mListener);
+        hideViews = new HideViews(notificationPager);
         hideViews.visibility(prevButton, previouslyPageDescription, nextButton, nextPageDescription);
         return rootView;
     }

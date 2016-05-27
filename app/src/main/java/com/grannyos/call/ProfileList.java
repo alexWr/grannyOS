@@ -15,28 +15,36 @@ import android.widget.TextView;
 import com.grannyos.R;
 import com.grannyos.database.LoadDataFromDatabase;
 import com.grannyos.database.pojo.RelativesData;
+import com.grannyos.network.SocketService;
 import com.grannyos.utils.DecodeBitmap;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 
 /**
  * Fragment show the list of all relatives
  */
 
-public class ProfileList extends Fragment implements OnlineOfflineListener{
+public class ProfileList extends Fragment{
 
 
     private static final String         TAG = "ProfileListGrannyOs";
     private int                         position = 0;
     private DecodeBitmap                decodeBitmap = new DecodeBitmap();
-    private ImageView            onlineOffline;
-    private RelativeLayout       callToRegion;
+    private ImageView                   onlineOffline;
+    private RelativeLayout              callToRegion;
     private Activity                    activity;
     private String                      relativeId;
     private ArrayList<RelativesData>    relativesData = new ArrayList<>();
     public static TextView              firstLastName;
+    private Socket                      socket;
 
 
     @Override
@@ -44,7 +52,11 @@ public class ProfileList extends Fragment implements OnlineOfflineListener{
         super.onCreate(savedInstanceState);
         position = getArguments().getInt("page");
         activity = getActivity();
-        Log.d(TAG, "page position" + position);
+        if(SocketService.getSocket() != null) {
+            socket = SocketService.getSocket();
+            online();
+            offline();
+        }
     }
 
     @Override
@@ -74,25 +86,21 @@ public class ProfileList extends Fragment implements OnlineOfflineListener{
         } catch (Exception e){
             Log.d(TAG, "Something went wrong in ProfileList");
         }
-        new CallPageFragment().setOnlineListener(this);
         return rootView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume");
         if(CallPageFragment.online.size()==0){
             changeUIOnlineOffline(R.drawable.offline, false);
         }
         else {
             for(int i = 0; i< CallPageFragment.online.size(); i++) {
                 if (CallPageFragment.online.get(i).equals(relativeId)) {
-                    Log.d(TAG, "changeUIOnlineOffline in for if");
                     changeUIOnlineOffline(R.drawable.online, true);
                 }
                 else {
-                    Log.d(TAG, "changeUIOnlineOffline in for else");
                     changeUIOnlineOffline(R.drawable.offline, false);
                 }
             }
@@ -117,32 +125,68 @@ public class ProfileList extends Fragment implements OnlineOfflineListener{
         }
     }
 
-    @Override
-    public void relativesOnlineOffline(boolean onlineOffline, String id) {
-        if(onlineOffline)
-            changeUIOnlineOffline(R.drawable.online, true);
-        else
-            changeUIOnlineOffline(R.drawable.offline, false);
-    }
-
     public void changeUIOnlineOffline(int resId, boolean clickListener){
         if(onlineOffline != null) {
-            Log.d(TAG, "onlineOffline != null");
             onlineOffline.setImageResource(resId);
         }
-        else{
-            Log.d(TAG, "change on ui online offline == null");
-        }
         if(callToRegion != null) {
-            Log.d(TAG, "callToRegion != null");
             if (clickListener) {
                 callToRegion.setOnClickListener(new OnClickListenerProfileList());
             } else {
                 callToRegion.setOnClickListener(null);
             }
         }
-        else{
-            Log.d(TAG, "change on ui online offline call to region == null");
-        }
+    }
+
+    private void online(){
+        socket.on("online", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                String relative= "";
+                if(args[0] != null) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(args[0].toString());
+                        relative = jsonObject.getString("relativeId");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    if (relative.equals(relativeId)) {
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.d(TAG, "online ");
+                                changeUIOnlineOffline(R.drawable.online, true);
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    }
+
+    private void offline() {
+        socket.on("offline", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                String relative= "";
+                if(args[0] != null) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(args[0].toString());
+                        relative = jsonObject.getString("relativeId");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    if (relative.equals(relativeId)) {
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.d(TAG, "offline");
+                                changeUIOnlineOffline(R.drawable.offline, false);
+                            }
+                        });
+                    }
+                }
+            }
+        });
     }
 }

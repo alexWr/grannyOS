@@ -50,7 +50,7 @@ public class AlbumList extends Fragment implements View.OnClickListener{
             mainProfileIcon.setImageResource(R.drawable.default_avatar);
         }
         else {
-            if(!LoadDataFromDatabase.getAlbumData().get(position).getCover().equals("null")) {
+            if(!LoadDataFromDatabase.getAlbumData().get(position).getCover().equals("none")) {
                 File imgFile = new File(LoadDataFromDatabase.getAlbumData().get(position).getCover());
                 if (imgFile.exists()) {
                     mainProfileIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -59,10 +59,11 @@ public class AlbumList extends Fragment implements View.OnClickListener{
             }
             else{
                 mainProfileIcon.setImageResource(R.drawable.default_avatar);
+
             }
         }
         Log.d(TAG, "coverTitle " + LoadDataFromDatabase.getAlbumData().get(position).getCoverTitle() + " " + position);
-        Log.d(TAG, "cover" + LoadDataFromDatabase.getAlbumData().get(position).getCover());
+        Log.d(TAG, "cover " + LoadDataFromDatabase.getAlbumData().get(position).getCover());
         if(LoadDataFromDatabase.getAlbumData().size()>0) {
             descriptionMainIcon.setText(LoadDataFromDatabase.getAlbumData().get(position).getCoverTitle());
         }
