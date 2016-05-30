@@ -34,10 +34,10 @@ public class GetAlbumAssets {
 
 
     private static final String TAG = "GetAlbumGrannyOs";
-    private RestInterface restInterface;
-    private File myDir;
-    private OkHttpClient okHttp;
-    private Context context;
+    private RestInterface       restInterface;
+    private File                myDir;
+    private OkHttpClient        okHttp;
+    private Context             context;
 
 
     public GetAlbumAssets(Context context){
@@ -121,7 +121,7 @@ public class GetAlbumAssets {
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.d(TAG, "" + error);
+                    Log.d(TAG, " " + error);
                 }
             });
         }

@@ -28,6 +28,7 @@ import retrofit.client.Response;
 public class ViewPagerFragment extends Fragment implements View.OnClickListener{
 
     private final static String TAG = "ViewPagerGrannyOs";
+    private int                 elementCount;
     private ViewPager           viewPager;
     private ImageView           nextButton;
     private ImageView           prevButton;
@@ -36,7 +37,6 @@ public class ViewPagerFragment extends Fragment implements View.OnClickListener{
     private TextView            previouslyPageDescription;
     private TextView            nextPageDescription;
     private String[]            helpDescription;
-    private ViewPagerAdapter    adapter;
     private GPSTracker          gps;
     private HideViews           hideViews;
     public static String        city = "";
@@ -44,12 +44,12 @@ public class ViewPagerFragment extends Fragment implements View.OnClickListener{
     public static double        lon = 0.0;
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.main_pager, container, false);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         SharedPreferences.Editor editor = sharedPreferences.edit();
+        elementCount = getActivity().getResources().getStringArray(R.array.description_main_icon).length;
         helpDescription = getActivity().getResources().getStringArray(R.array.help_description);
         viewPager=(ViewPager)rootView.findViewById(R.id.pagerSurveys);
         prevButton = (ImageView) rootView.findViewById(R.id.previousPage);
@@ -60,7 +60,7 @@ public class ViewPagerFragment extends Fragment implements View.OnClickListener{
         prevButton.setOnClickListener(this);
         nextButton.setOnClickListener(this);
         viewPager.setPageTransformer(true, new ZoomOutPageTransformer());
-        adapter = new ViewPagerAdapter(getActivity(), getChildFragmentManager(), GrannyOsListElement.class, 8);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity(), getChildFragmentManager(), GrannyOsListElement.class, elementCount);
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(0);
         viewPager.addOnPageChangeListener(mListener);
@@ -123,7 +123,7 @@ public class ViewPagerFragment extends Fragment implements View.OnClickListener{
             if(location!=null && getActivity() != null) {
                 lat = location.getLatitude();
                 lon = location.getLongitude();
-                Log.d(TAG, "my current location lat " + lat + " lon " + lon);
+                Log.d(TAG, "current location lat " + lat + " lon " + lon);
                 String endPoint = getActivity().getApplicationContext().getResources().getString(R.string.weatherEndpoint);
                 RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endPoint).build();
                 RestInterface restInterface = restAdapter.create(RestInterface.class);

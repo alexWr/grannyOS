@@ -28,13 +28,11 @@ import retrofit.client.Response;
 public class GetCalendarEvent {
 
     private static final String TAG = "GetCalendarGrannyOs";
-    private RestInterface restInterface;
-    private File myDir;
-    private OkHttpClient okHttp;
-    private Context context;
+    private RestInterface       restInterface;
+    private Context             context;
 
     public GetCalendarEvent(Context context){
-        okHttp = new OkHttpClient();
+        OkHttpClient okHttp = new OkHttpClient();
         okHttp.setReadTimeout(6000 * 100, TimeUnit.MILLISECONDS);
         String endPoint = context.getResources().getString(R.string.endpoint);
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endPoint).setClient(new OkClient(okHttp)).build();
@@ -78,7 +76,7 @@ public class GetCalendarEvent {
 
     private void createDir(){
         String root = Environment.getExternalStorageDirectory().toString();
-        myDir = new File(root + "/grannyos");
+        File myDir = new File(root + "/grannyos");
         if(!myDir.exists()) {
             if(myDir.mkdirs()){
                 Log.d(TAG, "create grannyOs repo ");

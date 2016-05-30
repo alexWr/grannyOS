@@ -11,14 +11,13 @@ import android.view.ViewGroup;
 
 public class ViewPagerAdapter  extends FragmentPagerAdapter {
 
-    private int PAGE_COUNT;
-    private Class<?> fragmentName;
-    private Context context;
+    private int         PAGE_COUNT;
+    private Class<?>    fragmentName;
+    private Context     context;
 
 
     public ViewPagerAdapter(Context context, FragmentManager fm, Class<?> className, int count) {
         super(fm);
-
         this.PAGE_COUNT = count;
         this.fragmentName = className;
         this.context = context;

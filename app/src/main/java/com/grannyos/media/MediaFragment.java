@@ -17,7 +17,7 @@ public class MediaFragment extends Fragment implements View.OnClickListener{
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.media_layout, container, false);
         ImageView image = (ImageView) rootView.findViewById(R.id.mainIcon);
         MainActivity.relativeLayout.setVisibility(View.VISIBLE);

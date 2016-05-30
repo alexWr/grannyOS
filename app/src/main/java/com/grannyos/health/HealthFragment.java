@@ -6,7 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PowerManager;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +37,6 @@ public class HealthFragment extends Fragment{
 
 
     private final static String TAG = "HealthGrannyOs";
-    private static PowerManager.WakeLock wakeLock;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -81,7 +80,7 @@ public class HealthFragment extends Fragment{
                 .setDataSourceTypes(DataSource.TYPE_RAW, DataSource.TYPE_DERIVED)
         .build()).setResultCallback(new ResultCallbacks<DataSourcesResult>() {
             @Override
-            public void onSuccess(DataSourcesResult dataSourcesResult) {
+            public void onSuccess(@NonNull DataSourcesResult dataSourcesResult) {
 
                 for(DataSource dataSource : dataSourcesResult.getDataSources()){
 
@@ -104,7 +103,7 @@ public class HealthFragment extends Fragment{
                             }
                         }).setResultCallback(new ResultCallbacks<Status>() {
                             @Override
-                            public void onSuccess(Status status) {
+                            public void onSuccess(@NonNull Status status) {
                                 if(status.isSuccess()){
                                     Log.d(TAG, "listener for " + dataType.getName() + "is register");
                                 }
@@ -114,7 +113,7 @@ public class HealthFragment extends Fragment{
                             }
 
                             @Override
-                            public void onFailure(Status status) {
+                            public void onFailure(@NonNull Status status) {
                                 Log.d(TAG, "error while setResultCallback " + status);
                             }
                         });
@@ -123,7 +122,7 @@ public class HealthFragment extends Fragment{
             }
 
             @Override
-            public void onFailure(Status status) {
+            public void onFailure(@NonNull Status status) {
 
             }
         });

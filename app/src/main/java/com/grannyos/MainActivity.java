@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
     private ReceiverEvents          receiverEvents;
     private boolean                 showLoginScreen;
     private SharedPreferences       sharedPreferences;
-    private Intent                  socketService;
     private boolean                 startNotification;
 
 
@@ -71,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         setContentView(R.layout.activity_main);
         wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        //noinspection deprecation
         strengthWifiIcon = new Drawable[]{
                 getResources().getDrawable(R.drawable.signal_0),
                 getResources().getDrawable(R.drawable.signal_1),
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
             } else {
                 if (SocketService.getSocket() == null) {
-                    socketService = new Intent(this, SocketService.class);
+                    Intent socketService = new Intent(this, SocketService.class);
                     startService(socketService);
                 }
                 new GetRelatives(this);
@@ -148,14 +148,12 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "can not unregister receiver");
             e.printStackTrace();
         }
-        Log.d(TAG, "activity onStop");
         onStop = true;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "activity onDestroy");
         if(SocketService.getSocket()!=null && SocketService.getSocket().connected()){
             SocketService.getSocket().disconnect();
         }
@@ -164,15 +162,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode== GooglePlusLogin.REQUEST_CODE_SIGN_IN){
+            Log.d(TAG, "onActivityResult setResult GOOGLE_SIGN_IN");
             LoginFragment fragment = (LoginFragment) getFragmentManager().findFragmentById(R.id.content_frame);
             fragment.onActivityResult(requestCode, resultCode, data);
         }
         if(requestCode == REQUEST_CODE_VIDEO_CHAT){
-            Log.d(TAG, "onActivityResult setResult" + resultCode);
             if(resultCode == RESULT_OK) {
-                Log.d(TAG, "onActivityResult setResult");
                 if (getFragmentManager().getBackStackEntryCount() > 1) {
-                    Log.d(TAG, "onActivityResult setResult");
+                    Log.d(TAG, "onActivityResult setResult VIDEO_CHAT");
                     onBackPressed();
                     onBackPressed();
                 }
@@ -190,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
 
             String id = intent.getStringExtra("gettingId");
+            Log.d(TAG, "Incoming socket events " + intent.getSerializableExtra("differentEvents"));
             switch ((DifferentEvents)intent.getSerializableExtra("differentEvents")){
                 case albumAdded:
                     new GetAlbum(MainActivity.this);
@@ -248,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 default:
-                    Log.d(TAG, "Error in receive events");
+                    Log.d(TAG, "Nothing equals in socket events");
                     break;
             }
         }

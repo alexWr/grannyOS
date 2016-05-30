@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 
 public class WeatherPageAdapter extends FragmentPagerAdapter {
 
-    private int PAGE_COUNT;
-    private double lat;
-    private double lon;
+    private int     PAGE_COUNT;
+    private double  lat;
+    private double  lon;
 
     public WeatherPageAdapter(FragmentManager fm, int count, double lat, double lon) {
         super(fm);
@@ -33,7 +33,6 @@ public class WeatherPageAdapter extends FragmentPagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        // TODO Auto-generated method stub
         super.destroyItem(container,position,object);
     }
 

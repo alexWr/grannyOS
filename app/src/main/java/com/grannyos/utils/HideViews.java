@@ -5,13 +5,13 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 /**
- * Class for hide previous/next button and their title
+ * Class hide previous/next button and their title
  */
 
 public class HideViews {
 
-    private ViewPager viewPager = null;
-    private int count = 0;
+    private ViewPager   viewPager = null;
+    private int         count = 0;
 
     public HideViews(ViewPager viewPager){
 

@@ -13,7 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/battery_charge"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:layout_marginEnd="@dimen/marginEndSmall"
             android:layout_centerInParent="true"
             android:textStyle="bold"
@@ -44,7 +44,7 @@
                 android:gravity="center"
                 android:textSize="@dimen/textSizeSmall"
                 android:textStyle="bold"
-                android:textColor="#ffffffff"
+                android:textColor="@color/white"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"/>
         </RelativeLayout>
@@ -62,7 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/marginTopSmall"
         android:layout_marginStart="@dimen/marginStartSmall"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textStyle="bold"
         android:textSize="@dimen/textSizeSmall"
         android:layout_toEndOf="@+id/wifiStrength"
@@ -75,6 +75,6 @@
         android:textSize="@dimen/textSizeStatusBarClock"
         android:layout_centerHorizontal="true"
         android:textStyle="bold"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:format24Hour="kk:mm" />
 </RelativeLayout>

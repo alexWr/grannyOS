@@ -32,7 +32,6 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
 
     private static final String TAG = "PhotoPageGrannyOs";
     public static ViewPager     photoAlbumPager;
-    private String              checkAlbumId;
     private ProgressBar         pbBatteryIndicator;
     private TextView            tvPercentIndicator;
     private ImageView           ivStrengthSignal;
@@ -45,12 +44,14 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
     private int                 showPos=1;
     private int                 position;
     private ViewPagerAdapter    photoPageAdapter;
+    private ChangeListener      mListener = new ChangeListener();
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mWifiManager = (WifiManager)getActivity().getSystemService(Context.WIFI_SERVICE);
+        //noinspection deprecation
         strengthWifiIcon = new Drawable[]{getResources().getDrawable(R.drawable.photo_signal0),
         getResources().getDrawable(R.drawable.photo_signal1),
         getResources().getDrawable(R.drawable.photo_signal2),
@@ -63,7 +64,7 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.photo_page_layout, container, false);
         MainActivity.relativeLayout.setVisibility(View.GONE);
-        checkAlbumId=getArguments().getString("albumId");
+        String checkAlbumId = getArguments().getString("albumId");
         Log.d(TAG, "getting albumId " + checkAlbumId);
         photoAlbumPager=(ViewPager)rootView.findViewById(R.id.photoAlbumPager);
         Button backButton = (Button) rootView.findViewById(R.id.backButton);
@@ -99,33 +100,7 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
             e.printStackTrace();
             Log.d(TAG, "Error in PhotoPageFragment");
         }
-        photoAlbumPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                showPos = position;
-                showPos++;
-                PhotoPageFragment.this.position = position;
-            }
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                if(state== ViewPager.SCROLL_STATE_IDLE){
-                    countPhoto.setText("" + showPos + " of " + photoPageAdapter.getCount());
-                    if(LoadDataFromDatabase.getPhotoData().get(position).getAssetTitle().equals("empty")){
-                        descriptionPhoto.setVisibility(View.GONE);
-                    }
-                    else{
-                        descriptionPhoto.setVisibility(View.VISIBLE);
-                        descriptionPhoto.setText(LoadDataFromDatabase.getPhotoData().get(position).getAssetTitle());
-                    }
-                }
-            }
-        });
+        photoAlbumPager.addOnPageChangeListener(mListener);
         try {
             getActivity().registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
             getActivity().registerReceiver(this.mWifiInfoReceiver, new IntentFilter(WifiManager.RSSI_CHANGED_ACTION));
@@ -134,6 +109,34 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
             e.printStackTrace();
         }
         return rootView;
+    }
+
+    public class ChangeListener implements ViewPager.OnPageChangeListener{
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            showPos = position;
+            showPos++;
+            PhotoPageFragment.this.position = position;
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            if(state== ViewPager.SCROLL_STATE_IDLE){
+                countPhoto.setText("" + showPos + " of " + photoPageAdapter.getCount());
+                if(LoadDataFromDatabase.getPhotoData().get(position).getAssetTitle().equals("empty")){
+                    descriptionPhoto.setVisibility(View.GONE);
+                }
+                else{
+                    descriptionPhoto.setVisibility(View.VISIBLE);
+                    descriptionPhoto.setText(LoadDataFromDatabase.getPhotoData().get(position).getAssetTitle());
+                }
+            }
+        }
     }
 
     @Override

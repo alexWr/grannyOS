@@ -31,6 +31,7 @@ public class GrannyOsListElement extends Fragment implements View.OnClickListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //noinspection deprecation
         mainIcon = new Drawable[] {
                 getActivity().getResources().getDrawable(R.drawable.call),
                 getActivity().getResources().getDrawable(R.drawable.events),
@@ -57,18 +58,16 @@ public class GrannyOsListElement extends Fragment implements View.OnClickListene
         ivIndicator.setVisibility(View.GONE);
         tvCountMissingCall.setVisibility(View.GONE);
         try{
-            if(position == 7) {
+            if(position == (mainIcon.length - 1)) {
                 tvDescription.setText(mainDescription[position] + " in " + ViewPagerFragment.city);
             }
             else {
                 tvDescription.setText(mainDescription[position]);
             }
-        }catch (Exception e){
+        }catch (Exception e) {
             Log.d(TAG, "Error in position of main icon");
             e.printStackTrace();
         }
-        //startActivity(new Intent(Settings.ACTION_SETTINGS));
-            //clickMainRegion.setOnClickListener(this);
         return rootView;
     }
 

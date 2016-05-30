@@ -34,7 +34,6 @@ public class LoadDataFromDatabase {
     private static ArrayList<String>            albumResource = new ArrayList<>();
     private static ArrayList<AlbumData>         albumData = new ArrayList<>();
     private static ArrayList<PhotoData>         photoData= new ArrayList<>();
-    private static ArrayList<String>            online = new ArrayList<>();
     private String                              checkAlbumId;
     private SharedPreferences                   sharedPreferences;
     private ContentValues                       contentValues;
@@ -304,6 +303,7 @@ public class LoadDataFromDatabase {
                 while (!cursor.isAfterLast()) {
                     File deletePhoto = new File(cursor.getString(cursor.getColumnIndex("resource")));
                     if (deletePhoto.exists())
+                        //noinspection ResultOfMethodCallIgnored
                         deletePhoto.delete();
                     cursor.moveToNext();
                 }

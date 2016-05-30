@@ -36,7 +36,6 @@ public class SocketService extends Service {
     private ArrayList<String>   arrayPeers = new ArrayList<>();
 
 
-
     public static Socket getSocket() {
         if(socket == null) {
             Log.e(TAG, "socket == null");
@@ -369,7 +368,6 @@ public class SocketService extends Service {
                 }
             }
         });
-
         socket.connect();
     }
 }

@@ -14,7 +14,6 @@ import com.grannyos.database.DatabaseHelper;
 import com.grannyos.database.LoadDataFromDatabase;
 import com.grannyos.network.ResponseRest;
 import com.grannyos.network.RestInterface;
-import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 
@@ -34,10 +33,10 @@ import retrofit.client.Response;
 public class GetRelatives {
 
     private static final String TAG = "GetRelativesGrannyOs";
-    private RestInterface restInterface;
-    private File myDir;
-    private OkHttpClient okHttp;
-    private Context context;
+    private RestInterface       restInterface;
+    private File                myDir;
+    private OkHttpClient        okHttp;
+    private Context             context;
 
 
     public GetRelatives(Context context){

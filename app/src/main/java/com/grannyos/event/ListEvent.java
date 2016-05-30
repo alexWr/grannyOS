@@ -32,7 +32,6 @@ public class ListEvent extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         position = getArguments().getInt("page");
-
     }
 
     @Override
@@ -46,11 +45,9 @@ public class ListEvent extends Fragment{
         String month;
         String day;
         try {
-
             Date date = inputFormat.parse(LoadDataFromDatabase.getEventData().get(position).getCalendarDate());
             month = outputFormatMonth.format(date);
             day = outputFormatDay.format(date);
-
             descriptionMainIcon.setText("" + day + " " + month + ". " + LoadDataFromDatabase.getEventData().get(position).getCalendarTitle());
             if (LoadDataFromDatabase.getAlbumResource().size() == 0) {
                 iconEvent.setVisibility(View.INVISIBLE);

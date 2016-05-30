@@ -32,13 +32,13 @@ import io.socket.client.Ack;
 
 public class IncomingCall extends Fragment implements View.OnClickListener{
 
-    private static final String         TAG = "IncomingCallGrannyOs";
-    private ArrayList<String> peerId = new ArrayList<>();
-    private Intent                      intent;
-    private String                      roomName;
-    private String                      callerName;
-    private String                      callerLastName;
-    private DecodeBitmap                decodeBitmap = new DecodeBitmap();
+    private static final String TAG = "IncomingCallGrannyOs";
+    private ArrayList<String>   peerId = new ArrayList<>();
+    private Intent              intent;
+    private String              roomName;
+    private String              callerName;
+    private String              callerLastName;
+    private DecodeBitmap        decodeBitmap = new DecodeBitmap();
 
 
     @Override

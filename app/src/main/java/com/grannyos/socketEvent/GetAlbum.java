@@ -13,7 +13,6 @@ import com.grannyos.database.DatabaseHelper;
 import com.grannyos.database.LoadDataFromDatabase;
 import com.grannyos.network.ResponseRest;
 import com.grannyos.network.RestInterface;
-import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 
@@ -34,10 +33,10 @@ import retrofit.client.Response;
 public class GetAlbum {
 
     private static final String TAG = "GetAlbumGrannyOs";
-    private RestInterface restInterface;
-    private File myDir;
-    private OkHttpClient okHttp;
-    private Context context;
+    private RestInterface       restInterface;
+    private File                myDir;
+    private OkHttpClient        okHttp;
+    private Context             context;
 
     public GetAlbum(Context context){
         okHttp = new OkHttpClient();
@@ -66,6 +65,12 @@ public class GetAlbum {
                             Request request = new Request.Builder()
                                     .url(album.getCover())
                                     .build();
+                            try{
+                                Thread.sleep(100);
+                            } catch(InterruptedException e){
+                                Log.d(TAG, "Error while thread sleep");
+                                e.printStackTrace();
+                            }
                             okHttp.newCall(request).enqueue(new com.squareup.okhttp.Callback() {
                                 @Override
                                 public void onFailure(Request request, IOException e) {
@@ -87,7 +92,6 @@ public class GetAlbum {
                                     String cover;
                                     cover = saveFile.getPath();
 
-                                    Log.d(TAG, "cover after check " + cover);
                                     ContentValues albumData = album.getValues();
                                     albumData.put(DatabaseHelper.ALBUM_COVER, cover);
                                     new LoadDataFromDatabase("album", context, albumData);

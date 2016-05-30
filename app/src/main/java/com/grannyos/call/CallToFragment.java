@@ -28,7 +28,6 @@ import io.socket.client.Ack;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
-;
 
 
 public class CallToFragment extends Fragment implements View.OnClickListener{
@@ -39,7 +38,7 @@ public class CallToFragment extends Fragment implements View.OnClickListener{
     private DecodeBitmap        decodeBitmap = new DecodeBitmap();
     private ArrayList<String>   arrayPeers = new ArrayList<>();
     private SharedPreferences   sharedPreferences;
-    private Socket socket;
+    private Socket              socket;
 
 
     @Override

@@ -111,7 +111,7 @@ public class GooglePlusLogin implements GoogleApiClient.ConnectionCallbacks, Goo
             @Override
             protected Object doInBackground(Object... params) {
                 String scope = "oauth2:" + Scopes.PLUS_LOGIN ;
-                Log.d(TAG,"onConnected");
+                Log.d(TAG," onConnected ");
                 try {
                     token = GoogleAuthUtil.getToken(context, Plus.AccountApi.getAccountName(googleApiClient), scope);
                     Log.d(TAG, token);
@@ -196,6 +196,7 @@ public class GooglePlusLogin implements GoogleApiClient.ConnectionCallbacks, Goo
         googleApiClient.connect();
         Log.d(TAG, "onConnectionSuspend");
     }
+
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult result) {
         mConnectionProgressDialog.dismiss();
@@ -208,9 +209,6 @@ public class GooglePlusLogin implements GoogleApiClient.ConnectionCallbacks, Goo
                 // Fetch a new result to start.
                 googleApiClient.connect();
             }
-        }
-        else{
-            //Toast.makeText(context,resources.getString(R.string.alert_message),Toast.LENGTH_LONG).show();
         }
     }
 

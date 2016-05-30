@@ -52,7 +52,7 @@ public class ProfileList extends Fragment{
         super.onCreate(savedInstanceState);
         position = getArguments().getInt("page");
         activity = getActivity();
-        if(SocketService.getSocket() != null) {
+        if(SocketService.getSocket() != null && SocketService.getSocket().connected()) {
             socket = SocketService.getSocket();
             online();
             offline();

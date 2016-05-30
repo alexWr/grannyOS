@@ -49,8 +49,6 @@ public class CallPageFragment extends Fragment implements View.OnClickListener{
     private TextView                    nextPageDescription;
     private HideViews                   hideViews;
     private String                      relativeId;
-    private String                      firstName;
-    private String                      lastName;
     private String                      textOffline;
     private String                      textOnline;
     private ArrayList<RelativesData>    relativesData;
@@ -279,8 +277,8 @@ public class CallPageFragment extends Fragment implements View.OnClickListener{
     private void getInfo(){
         if(relativesData.size() != 0){
             relativeId = relativesData.get(callPager.getCurrentItem()).getRelativesId();
-            firstName = relativesData.get(callPager.getCurrentItem()).getFirstName();
-            lastName = relativesData.get(callPager.getCurrentItem()).getLastName();
+            String firstName = relativesData.get(callPager.getCurrentItem()).getFirstName();
+            String lastName = relativesData.get(callPager.getCurrentItem()).getLastName();
             textOnline = "To call " + firstName + " " + lastName + " tap here";
             textOffline = "You can't call " + firstName + " " + lastName + " because relative offline";
         }

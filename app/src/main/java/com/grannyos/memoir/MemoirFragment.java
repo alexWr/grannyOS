@@ -15,14 +15,13 @@ import com.grannyos.R;
 public class MemoirFragment extends Fragment implements View.OnClickListener {
 
 
-    private Button      stopRecord;
     private Chronometer chronometer;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.memoir_layout, container, false);
-        stopRecord = (Button) rootView.findViewById(R.id.stopRecord);
+        Button stopRecord = (Button) rootView.findViewById(R.id.stopRecord);
         chronometer = (Chronometer) rootView.findViewById(R.id.chronometer);
         chronometer.setBase(SystemClock.elapsedRealtime());
         chronometer.start();

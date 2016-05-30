@@ -8,9 +8,6 @@ import android.graphics.BitmapFactory;
 public class DecodeBitmap {
 
 
-
-    public DecodeBitmap(){}
-
     public static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
@@ -49,8 +46,7 @@ public class DecodeBitmap {
         return BitmapFactory.decodeFile(imgFile, options);
     }
 
-    public Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
-                                                         int reqWidth, int reqHeight) {
+    public Bitmap decodeSampledBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight) {
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();

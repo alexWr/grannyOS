@@ -5,6 +5,7 @@ import android.view.View;
 
 
 public class ZoomOutPageTransformer implements ViewPager.PageTransformer {
+
     private static final float MIN_SCALE = 0.85f;
     private static final float MIN_ALPHA = 0.5f;
 
