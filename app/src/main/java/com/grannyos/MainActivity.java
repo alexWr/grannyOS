@@ -3,6 +3,7 @@ package com.grannyos;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -243,7 +244,10 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case callMissed:
-
+                    int missing = intent.getIntExtra("missing", 0);
+                    ContentValues update = new ContentValues();
+                    update.put(DatabaseHelper.RELATIVES_MISSING_CALL, missing);
+                    new LoadDataFromDatabase(MainActivity.this, DatabaseHelper.TABLE_RELATIVES, update, id);
                     break;
 
                 default:

@@ -34,8 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/mainProfileIcon"
             android:layout_marginTop="@dimen/marginTopSmall"
-            android:layout_marginStart="@dimen/marginTextMissingCall"
-            android:visibility="invisible">
+            android:layout_marginStart="@dimen/marginTextMissingCall">
             <ImageView
                 android:id="@+id/indicator"
                 android:layout_marginTop="@dimen/marginTop"
@@ -49,7 +48,6 @@
                 android:layout_centerInParent="true"
                 android:id="@+id/countMissingCall"
                 android:textColor="@color/white"
-                android:text="2"
                 android:textStyle="bold"
                 android:textSize="@dimen/textSizeLarge"/>
         </RelativeLayout>

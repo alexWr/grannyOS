@@ -21,6 +21,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String RELATIVES_FIRST_NAME = "firstName";
     public static final String RELATIVES_LAST_NAME = "lastName";
     public static final String RELATIVES_ICON= "image";
+    public static final String RELATIVES_MISSING_CALL= "missing";
 
 
     public static final String ALBUM_ID = "id";
@@ -45,7 +46,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_RELATIVES = "create table if not exists "
             + TABLE_RELATIVES + " (" + RELATIVES_ID + " text primary key, "
             +  RELATIVES_FIRST_NAME + " text not null, "  + RELATIVES_LAST_NAME + " text, " + RELATIVES_ICON +
-            " text);";
+            " text, " + RELATIVES_MISSING_CALL + " integer);";
 
     private static final String CREATE_TABLE_ALBUM = "create table if not exists "
             + TABLE_ALBUM + " (" + ALBUM_ID + " text primary key, "

@@ -10,9 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.grannyos.call.CallPageFragment;
+import com.grannyos.database.LoadDataFromDatabase;
+import com.grannyos.database.pojo.RelativesData;
 import com.grannyos.event.EventPageFragment;
 import com.grannyos.health.HealthFragment;
 import com.grannyos.media.MediaFragment;
@@ -28,6 +31,9 @@ public class GrannyOsListElement extends Fragment implements View.OnClickListene
     private int             position = 0;
     private Drawable        mainIcon[];
     private String[]        mainDescription;
+    private RelativeLayout  missingCall;
+    private TextView        countMissingCall;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,6 +50,12 @@ public class GrannyOsListElement extends Fragment implements View.OnClickListene
         position = getArguments().getInt("page");
         mainDescription = getActivity().getResources().getStringArray(R.array.description_main_icon);
         Log.d(TAG, "page position: " + position);
+        try {
+            new LoadDataFromDatabase("relatives", getActivity(), "");
+        } catch(Exception e){
+            Log.d(TAG, "Error while get relatives");
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -52,11 +64,19 @@ public class GrannyOsListElement extends Fragment implements View.OnClickListene
         ImageView ivMainIcon = (ImageView) rootView.findViewById(R.id.mainIcon);
         ivMainIcon.setImageDrawable(mainIcon[position]);
         TextView tvDescription = (TextView) rootView.findViewById(R.id.descriptionMainIcon);
-        ImageView ivIndicator = (ImageView) rootView.findViewById(R.id.indicator);
-        TextView tvCountMissingCall = (TextView) rootView.findViewById(R.id.countMissingCall);
+        missingCall = (RelativeLayout) rootView.findViewById(R.id.relativeMissingCall);
+        countMissingCall = (TextView) rootView.findViewById(R.id.countMissingCall);
         ivMainIcon.setOnClickListener(this);
-        ivIndicator.setVisibility(View.GONE);
-        tvCountMissingCall.setVisibility(View.GONE);
+        for(RelativesData data : LoadDataFromDatabase.getRelativeData()){
+            if(data.getMissing() > 0){
+                missingCall.setVisibility(View.VISIBLE);
+                countMissingCall.setText(data.getMissing());
+            }
+            else{
+                missingCall.setVisibility(View.INVISIBLE);
+            }
+        }
+
         try{
             if(position == (mainIcon.length - 1)) {
                 tvDescription.setText(mainDescription[position] + " in " + ViewPagerFragment.city);

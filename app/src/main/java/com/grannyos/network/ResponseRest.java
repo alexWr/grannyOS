@@ -100,6 +100,7 @@ public class ResponseRest {
             }
             values.put(DatabaseHelper.RELATIVES_FIRST_NAME, firstName);
             values.put(DatabaseHelper.RELATIVES_LAST_NAME, lastName);
+            values.put(DatabaseHelper.RELATIVES_MISSING_CALL, 0);
 
             return values;
         }

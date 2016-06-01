@@ -38,6 +38,8 @@ public class ProfileList extends Fragment{
     private static final String         TAG = "ProfileListGrannyOs";
     private int                         position = 0;
     private DecodeBitmap                decodeBitmap = new DecodeBitmap();
+    private RelativeLayout              missingCall;
+    private TextView                    countMissingCall;
     private ImageView                   onlineOffline;
     private RelativeLayout              callToRegion;
     private Activity                    activity;
@@ -64,6 +66,8 @@ public class ProfileList extends Fragment{
         View rootView = inflater.inflate(R.layout.profile_list_layout, container, false);
         callToRegion = (RelativeLayout) rootView.findViewById(R.id.callToRegion);
         ImageView mainProfileIcon = (ImageView) rootView.findViewById(R.id.mainProfileIcon);
+        missingCall = (RelativeLayout) rootView.findViewById(R.id.relativeMissingCall);
+        countMissingCall = (TextView) rootView.findViewById(R.id.countMissingCall);
         onlineOffline = (ImageView) rootView.findViewById(R.id.onlineOffline);
         firstLastName = (TextView) rootView.findViewById(R.id.firstLastName);
         relativesData = LoadDataFromDatabase.getRelativeData();
@@ -92,6 +96,16 @@ public class ProfileList extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
+        try {
+            if (relativesData.get(position).getMissing() > 0) {
+                missingCall.setVisibility(View.VISIBLE);
+                countMissingCall.setText(relativesData.get(position).getMissing());
+            } else {
+                missingCall.setVisibility(View.INVISIBLE);
+            }
+        } catch(Exception e){
+            Log.d(TAG, "Error to hide missing calls");
+        }
         if(CallPageFragment.online.size()==0){
             changeUIOnlineOffline(R.drawable.offline, false);
         }

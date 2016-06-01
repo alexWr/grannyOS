@@ -183,12 +183,14 @@ public class LoadDataFromDatabase {
 
     private void getDataRelatives(){
         relativesData.clear();
-        String[] columns = new String[]{ DatabaseHelper.RELATIVES_FIRST_NAME, DatabaseHelper.RELATIVES_LAST_NAME, DatabaseHelper.RELATIVES_ICON, DatabaseHelper.RELATIVES_ID};
+        String[] columns = new String[]{ DatabaseHelper.RELATIVES_FIRST_NAME, DatabaseHelper.RELATIVES_LAST_NAME, DatabaseHelper.RELATIVES_ICON,
+                DatabaseHelper.RELATIVES_ID, DatabaseHelper.RELATIVES_MISSING_CALL};
         cursor=db.query(DatabaseHelper.TABLE_RELATIVES,columns,null,null,null,null, DatabaseHelper.RELATIVES_FIRST_NAME + " COLLATE NOCASE ASC");
         if (cursor .moveToFirst()) {
             while (!cursor.isAfterLast()) {
-                RelativesData relatives = new RelativesData(cursor.getString(cursor.getColumnIndex(DatabaseHelper.RELATIVES_FIRST_NAME)),cursor.getString(cursor.getColumnIndex(DatabaseHelper.RELATIVES_LAST_NAME)),
-                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.RELATIVES_ICON)),cursor.getString(cursor.getColumnIndex(DatabaseHelper.RELATIVES_ID)));
+                RelativesData relatives = new RelativesData(cursor.getString(cursor.getColumnIndex(DatabaseHelper.RELATIVES_FIRST_NAME)),
+                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.RELATIVES_LAST_NAME)), cursor.getString(cursor.getColumnIndex(DatabaseHelper.RELATIVES_ICON)),
+                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.RELATIVES_ID)), cursor.getInt(cursor.getColumnIndex(DatabaseHelper.RELATIVES_MISSING_CALL)));
                 relativesData.add(relatives);
                 cursor.moveToNext();
             }
