@@ -40,8 +40,8 @@ public class ViewPagerFragment extends Fragment implements View.OnClickListener{
     private GPSTracker          gps;
     private HideViews           hideViews;
     public static String        city = "";
-    public static double        lat = 0.0;
-    public static double        lon = 0.0;
+    public static Double        lat = 0.0;
+    public static Double        lon = 0.0;
 
 
     @Override
@@ -60,11 +60,10 @@ public class ViewPagerFragment extends Fragment implements View.OnClickListener{
         prevButton.setOnClickListener(this);
         nextButton.setOnClickListener(this);
         viewPager.setPageTransformer(true, new ZoomOutPageTransformer());
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity(), getChildFragmentManager(), GrannyOsListElement.class, elementCount);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity(), getChildFragmentManager(), GrannyOsListElement.class, elementCount, null ,null);
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(0);
         viewPager.addOnPageChangeListener(mListener);
-        tvHelpDescription.setText(helpDescription[viewPager.getCurrentItem()]);
         editor.putBoolean("firstTime", true);
         editor.apply();
         return rootView;
@@ -73,6 +72,7 @@ public class ViewPagerFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onResume() {
         super.onResume();
+        tvHelpDescription.setText(helpDescription[viewPager.getCurrentItem()]);
         hideViews = new HideViews(viewPager);
         hideViews.visibility(prevButton, previouslyPageDescription, nextButton, nextPageDescription);
         gps = new GPSTracker(getActivity(), locationResult);

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.grannyos.R;
+import com.grannyos.ViewPagerAdapter;
 import com.grannyos.utils.HideViews;
 import com.grannyos.utils.ZoomOutPageTransformer;
 
@@ -45,7 +46,7 @@ public class WeatherPageFragment extends Fragment implements View.OnClickListene
         nextButton.setOnClickListener(this);
         backButton.setOnClickListener(this);
         weatherPager.setPageTransformer(true, new ZoomOutPageTransformer());
-        WeatherPageAdapter weatherPageAdapter = new WeatherPageAdapter(getChildFragmentManager(), 7, lat,lon);
+        ViewPagerAdapter weatherPageAdapter = new ViewPagerAdapter(getActivity(), getChildFragmentManager(), WeatherList.class, 7, lat,lon);
         weatherPager.setAdapter(weatherPageAdapter);
         weatherPager.setCurrentItem(0);
         weatherPager.addOnPageChangeListener(mListener);

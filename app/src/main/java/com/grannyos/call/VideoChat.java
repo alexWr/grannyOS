@@ -12,6 +12,7 @@ import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -104,12 +105,13 @@ public class VideoChat extends Activity {
                 | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         mWifiManager = (WifiManager)getSystemService(Context.WIFI_SERVICE);
         strengthWifiIcon = new Drawable[]{
-                getResources().getDrawable(R.drawable.signal_0),
-                getResources().getDrawable(R.drawable.signal_1),
-                getResources().getDrawable(R.drawable.signal_2),
-                getResources().getDrawable(R.drawable.signal_3),
-                getResources().getDrawable(R.drawable.signal_4),
-                getResources().getDrawable(R.drawable.signal_5)};
+                ResourcesCompat.getDrawable(getResources(), R.drawable.signal_0, null),
+                ResourcesCompat.getDrawable(getResources(), R.drawable.signal_1, null),
+                ResourcesCompat.getDrawable(getResources(), R.drawable.signal_2, null),
+                ResourcesCompat.getDrawable(getResources(), R.drawable.signal_3, null),
+                ResourcesCompat.getDrawable(getResources(), R.drawable.signal_4, null),
+                ResourcesCompat.getDrawable(getResources(), R.drawable.signal_5, null)
+        };
         setContentView(R.layout.video_chat_layout);
         video = (VideoView) findViewById(R.id.videoChat);
         pbBatteryIndicator = (ProgressBar) findViewById(R.id.batteryIndicator);

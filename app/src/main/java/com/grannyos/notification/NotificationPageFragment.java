@@ -42,7 +42,7 @@ public class NotificationPageFragment extends Fragment implements View.OnClickLi
         nextButton.setOnClickListener(this);
         okClose.setOnClickListener(this);
         notificationPager.setPageTransformer(true, new ZoomOutPageTransformer());
-        ViewPagerAdapter notificationPageAdapter = new ViewPagerAdapter(getActivity(), getChildFragmentManager(), ListNotification.class, 1);
+        ViewPagerAdapter notificationPageAdapter = new ViewPagerAdapter(getActivity(), getChildFragmentManager(), ListNotification.class, 1, null, null);
         notificationPager.setAdapter(notificationPageAdapter);
         notificationPager.setCurrentItem(0);
         notificationPager.addOnPageChangeListener(mListener);

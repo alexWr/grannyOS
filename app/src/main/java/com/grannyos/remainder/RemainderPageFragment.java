@@ -50,7 +50,7 @@ public class RemainderPageFragment extends Fragment implements View.OnClickListe
         remainderPager.setPageTransformer(true, new ZoomOutPageTransformer());
         try {
             new LoadDataFromDatabase("event", getActivity(), "");
-            remainderPageAdapter = new ViewPagerAdapter(getActivity(), getChildFragmentManager(), RemainderList.class, 0);
+            remainderPageAdapter = new ViewPagerAdapter(getActivity(), getChildFragmentManager(), RemainderList.class, 0, null, null);
             remainderPager.setAdapter(remainderPageAdapter);
             remainderPager.setCurrentItem(0);
             remainderPager.addOnPageChangeListener(mListener);

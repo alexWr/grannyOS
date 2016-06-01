@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,16 +32,15 @@ public class GrannyOsListElement extends Fragment implements View.OnClickListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //noinspection deprecation
         mainIcon = new Drawable[] {
-                getActivity().getResources().getDrawable(R.drawable.call),
-                getActivity().getResources().getDrawable(R.drawable.events),
-                getActivity().getResources().getDrawable(R.drawable.main_icon_album),
-                getActivity().getResources().getDrawable(R.drawable.health),
-                getActivity().getResources().getDrawable(R.drawable.reminder),
-                getActivity().getResources().getDrawable(R.drawable.memoirs),
-                getActivity().getResources().getDrawable(R.drawable.media),
-                getActivity().getResources().getDrawable(R.drawable.weather)};
+                ResourcesCompat.getDrawable(getActivity().getResources(), R.drawable.call, null),
+                ResourcesCompat.getDrawable(getActivity().getResources(), R.drawable.events, null),
+                ResourcesCompat.getDrawable(getActivity().getResources(), R.drawable.main_icon_album, null),
+                ResourcesCompat.getDrawable(getActivity().getResources(), R.drawable.health, null),
+                ResourcesCompat.getDrawable(getActivity().getResources(), R.drawable.reminder, null),
+                ResourcesCompat.getDrawable(getActivity().getResources(), R.drawable.memoirs,null),
+                ResourcesCompat.getDrawable(getActivity().getResources(), R.drawable.media,null),
+                ResourcesCompat.getDrawable(getActivity().getResources(), R.drawable.weather, null)};
         position = getArguments().getInt("page");
         mainDescription = getActivity().getResources().getStringArray(R.array.description_main_icon);
         Log.d(TAG, "page position: " + position);

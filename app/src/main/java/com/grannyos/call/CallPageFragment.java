@@ -133,7 +133,7 @@ public class CallPageFragment extends Fragment implements View.OnClickListener{
     private void setAdapter(){
         try {
             ViewPagerAdapter callPagerAdapter = new ViewPagerAdapter(getActivity(), getChildFragmentManager(),
-                    ProfileList.class, LoadDataFromDatabase.getRelativeData().size());
+                    ProfileList.class, LoadDataFromDatabase.getRelativeData().size(), null, null);
             callPager.setAdapter(callPagerAdapter);
             callPager.setCurrentItem(currentPosition);
             callPager.addOnPageChangeListener(mListener);

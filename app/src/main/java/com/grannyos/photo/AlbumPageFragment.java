@@ -41,7 +41,8 @@ public class AlbumPageFragment extends Fragment implements View.OnClickListener{
         nextPageDescription = (TextView) rootView.findViewById(R.id.nextPageDescription);
         photoPager.setPageTransformer(true, new ZoomOutPageTransformer());
         new LoadDataFromDatabase("album", getActivity(), "");
-        ViewPagerAdapter photoPagerAdapter = new ViewPagerAdapter(getActivity(), getChildFragmentManager(), AlbumList.class, LoadDataFromDatabase.getAlbumData().size());
+        ViewPagerAdapter photoPagerAdapter = new ViewPagerAdapter(getActivity(), getChildFragmentManager(), AlbumList.class,
+                LoadDataFromDatabase.getAlbumData().size(), null, null);
         photoPager.setAdapter(photoPagerAdapter);
         photoPager.setCurrentItem(currentPosition);
         prevButton.setOnClickListener(this);

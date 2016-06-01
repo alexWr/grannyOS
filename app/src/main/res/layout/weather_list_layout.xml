@@ -11,13 +11,11 @@
         android:layout_centerHorizontal="true"
         android:textSize="@dimen/textSizeLarge"
         android:layout_marginTop="@dimen/marginTopWeather"
-        android:textColor="@color/black"
-        android:text="Today"/>
+        android:textColor="@color/black" />
     <ImageView
         android:layout_width="@dimen/backBtnHeight"
         android:layout_height="@dimen/backBtnHeight"
         android:id="@+id/mainWeatherIcon"
-        android:src="@drawable/cloudy"
         android:layout_marginTop="@dimen/marginTopWeatherIcon"
         android:layout_marginStart="@dimen/marginStart"/>
     <TextView
@@ -27,7 +25,6 @@
         android:textColor="#ff007cf7"
         android:textSize="@dimen/textSizeWeatherLarge"
         android:textStyle="bold"
-        android:text="42"
         android:layout_toEndOf="@+id/mainWeatherIcon"
         android:layout_marginStart="@dimen/marginStartSmall"
         android:layout_marginTop="@dimen/marginTopWeather"/>

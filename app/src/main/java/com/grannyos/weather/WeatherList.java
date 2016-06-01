@@ -31,16 +31,6 @@ public class WeatherList extends Fragment{
     private double              lon;
 
 
-    static WeatherList newInstance(int position, double lat, double lon) {
-        WeatherList pageFragment = new WeatherList();
-        Bundle arguments = new Bundle();
-        arguments.putInt("page", position);
-        arguments.putDouble("lat", lat);
-        arguments.putDouble("lon",lon);
-        pageFragment.setArguments(arguments);
-        return pageFragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +85,7 @@ public class WeatherList extends Fragment{
                 airNoon.setText("" + weatherResponse.getWeather().get(position).getHumidity() + " %");
                 airEvening.setText("" + weatherResponse.getWeather().get(position).getHumidity() + " %");
                 airNight.setText("" + weatherResponse.getWeather().get(position).getHumidity() + " %");
+                mainWeatherIcon.setImageResource(R.drawable.cloudy);
                 if (position == 0) {
                     day.setText("Today");
                 }

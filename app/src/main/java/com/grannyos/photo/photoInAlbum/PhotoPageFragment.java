@@ -10,6 +10,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -51,13 +52,13 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mWifiManager = (WifiManager)getActivity().getSystemService(Context.WIFI_SERVICE);
-        //noinspection deprecation
-        strengthWifiIcon = new Drawable[]{getResources().getDrawable(R.drawable.photo_signal0),
-        getResources().getDrawable(R.drawable.photo_signal1),
-        getResources().getDrawable(R.drawable.photo_signal2),
-        getResources().getDrawable(R.drawable.photo_signal3),
-        getResources().getDrawable(R.drawable.photo_signal4),
-        getResources().getDrawable(R.drawable.photo_signal5) };
+        strengthWifiIcon = new Drawable[]{ResourcesCompat.getDrawable(getResources(), R.drawable.photo_signal0, null),
+                ResourcesCompat.getDrawable(getResources(), R.drawable.photo_signal1, null),
+                ResourcesCompat.getDrawable(getResources(), R.drawable.photo_signal2, null),
+                ResourcesCompat.getDrawable(getResources(), R.drawable.photo_signal3, null),
+                ResourcesCompat.getDrawable(getResources(), R.drawable.photo_signal4, null),
+                ResourcesCompat.getDrawable(getResources(), R.drawable.photo_signal5, null)
+        };
     }
 
     @Override
@@ -81,7 +82,8 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
         photoAlbumPager.setPageTransformer(true, new ZoomOutPageTransformer());
         try {
             new LoadDataFromDatabase("photo", getActivity(), checkAlbumId);
-            photoPageAdapter = new ViewPagerAdapter(getActivity(), getChildFragmentManager(), PhotoList.class, LoadDataFromDatabase.getPhotoData().size());
+            photoPageAdapter = new ViewPagerAdapter(getActivity(), getChildFragmentManager(), PhotoList.class,
+                    LoadDataFromDatabase.getPhotoData().size(), null, null);
             photoAlbumPager.setAdapter(photoPageAdapter);
             photoAlbumPager.setCurrentItem(0);
             countPhoto.setText("" + showPos + " of " + photoPageAdapter.getCount());

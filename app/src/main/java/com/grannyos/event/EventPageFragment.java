@@ -49,7 +49,7 @@ public class EventPageFragment extends Fragment implements View.OnClickListener{
             Log.d(TAG, "current event " + LoadDataFromDatabase.getEventData().size());
             Log.d(TAG, "current event album resource " + LoadDataFromDatabase.getAlbumResource().size());
             ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getActivity(), getChildFragmentManager(),
-                    ListEvent.class, LoadDataFromDatabase.getEventData().size());
+                    ListEvent.class, LoadDataFromDatabase.getEventData().size(), null, null);
             eventPager.setAdapter(viewPagerAdapter);
             eventPager.setCurrentItem(0);
             eventPager.addOnPageChangeListener(mListener);

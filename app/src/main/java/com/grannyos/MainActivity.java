@@ -13,6 +13,7 @@ import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.WindowManager;
@@ -70,14 +71,14 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         setContentView(R.layout.activity_main);
         wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        //noinspection deprecation
         strengthWifiIcon = new Drawable[]{
-                getResources().getDrawable(R.drawable.signal_0),
-                getResources().getDrawable(R.drawable.signal_1),
-                getResources().getDrawable(R.drawable.signal_2),
-                getResources().getDrawable(R.drawable.signal_3),
-                getResources().getDrawable(R.drawable.signal_4),
-                getResources().getDrawable(R.drawable.signal_5)};
+                ResourcesCompat.getDrawable(getResources(), R.drawable.signal_0, null),
+                ResourcesCompat.getDrawable(getResources(), R.drawable.signal_1, null),
+                ResourcesCompat.getDrawable(getResources(), R.drawable.signal_2, null),
+                ResourcesCompat.getDrawable(getResources(), R.drawable.signal_3, null),
+                ResourcesCompat.getDrawable(getResources(), R.drawable.signal_4, null),
+                ResourcesCompat.getDrawable(getResources(), R.drawable.signal_5, null)
+        };
         relativeLayout = (RelativeLayout) findViewById(R.id.statusBarRelative);
         pbBatteryIndicator = (ProgressBar) findViewById(R.id.batteryIndicator);
         tvPercentIndicator = (TextView) findViewById(R.id.percentIndicator);

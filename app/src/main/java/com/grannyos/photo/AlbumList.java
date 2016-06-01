@@ -46,7 +46,7 @@ public class AlbumList extends Fragment implements View.OnClickListener{
         mainProfileIcon.setOnClickListener(this);
         MainActivity.relativeLayout.setVisibility(View.VISIBLE);
         Log.d(TAG, "albumData size" + LoadDataFromDatabase.getAlbumData().size());
-        if(LoadDataFromDatabase.getAlbumData().get(position).getCover() == null || LoadDataFromDatabase.getAlbumData().size()==0){
+        if(LoadDataFromDatabase.getAlbumData().get(position).getCover() == null || LoadDataFromDatabase.getAlbumData().size() == 0){
             mainProfileIcon.setImageResource(R.drawable.default_avatar);
         }
         else {
@@ -82,10 +82,5 @@ public class AlbumList extends Fragment implements View.OnClickListener{
         fragment.setArguments(bundle);
         FragmentManager fragmentManager = getActivity().getFragmentManager();
         fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.content_frame, fragment).commit();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 }

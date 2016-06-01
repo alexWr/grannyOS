@@ -14,19 +14,27 @@ public class ViewPagerAdapter  extends FragmentPagerAdapter {
     private int         PAGE_COUNT;
     private Class<?>    fragmentName;
     private Context     context;
+    private Double      lat = 0.0;
+    private Double      lon = 0.0;
 
 
-    public ViewPagerAdapter(Context context, FragmentManager fm, Class<?> className, int count) {
+    public ViewPagerAdapter(Context context, FragmentManager fm, Class<?> className, int count, Double lat, Double lon) {
         super(fm);
         this.PAGE_COUNT = count;
         this.fragmentName = className;
         this.context = context;
+        this.lat = lat;
+        this.lon = lon;
     }
 
     @Override
     public Fragment getItem(int position) {
         Bundle bundle = new Bundle();
         bundle.putInt("page", position);
+        if(lat != null && lon != null){
+            bundle.putDouble("lat", lat);
+            bundle.putDouble("lon", lon);
+        }
         return Fragment.instantiate(context, fragmentName.getName(), bundle);
     }
 
