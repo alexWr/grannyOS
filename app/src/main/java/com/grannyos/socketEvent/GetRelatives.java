@@ -24,11 +24,11 @@ import java.util.concurrent.TimeUnit;
 
 import okio.BufferedSink;
 import okio.Okio;
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.OkClient;
-import retrofit.client.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class GetRelatives {
 
@@ -43,8 +43,11 @@ public class GetRelatives {
         okHttp = new OkHttpClient();
         okHttp.setReadTimeout(6000 * 100, TimeUnit.MILLISECONDS);
         String endPoint = context.getResources().getString(R.string.endpoint);
-        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endPoint).setClient(new OkClient(okHttp)).build();
-        restInterface = restAdapter.create(RestInterface.class);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(endPoint)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        restInterface = retrofit.create(RestInterface.class);
         this.context = context;
         createDir();
         getRelativesFromApi();
@@ -54,8 +57,73 @@ public class GetRelatives {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         final String sessionId = sharedPreferences.getString("sessionId", null);
         if(sessionId != null) {
+            Call<List<ResponseRest.ListRelativesResponse>> call = restInterface.getListRelatives(sessionId);
+            call.enqueue(new Callback<List<ResponseRest.ListRelativesResponse>>() {
+                @Override
+                public void onResponse(Call<List<ResponseRest.ListRelativesResponse>> call, Response<List<ResponseRest.ListRelativesResponse>> response) {
+                    if(response.isSuccessful()) {
+                        Log.d(TAG, "response from relatives" + response.body().toString());
+                        for (int i = 0; i < response.body().size(); i++) {
 
-            restInterface.getListRelatives(sessionId, new Callback<List<ResponseRest.ListRelativesResponse>>() {
+                            final ResponseRest.ListRelativesResponse relative = response.body().get(i);
+                            Log.d(TAG, "avatar url " + relative.getAvatar());
+                            String tmp;
+                            if (relative.getAvatar() == null)
+                                tmp = "none";
+                            else
+                                tmp = relative.getAvatar();
+                            final String avatarURL = tmp;
+                            if (!avatarURL.equals("none")) {
+                                Request request = new Request.Builder()
+                                        .url(avatarURL)
+                                        .build();
+                                okHttp.newCall(request).enqueue(new com.squareup.okhttp.Callback() {
+                                    @Override
+                                    public void onFailure(Request request, IOException e) {
+                                        Log.d(TAG, "error while download image to relatives" + request.body());
+                                        ContentValues values = relative.getValues();
+
+                                        values.put(DatabaseHelper.RELATIVES_ICON, "none");
+                                        new LoadDataFromDatabase("relatives", context, values);
+                                    }
+
+                                    @Override
+                                    public void onResponse(com.squareup.okhttp.Response response) throws IOException {
+                                        if (!response.isSuccessful())
+                                            throw new IOException("Unexpected code " + response);
+
+                                        String mimeType = MimeTypeMap.getFileExtensionFromUrl(avatarURL);
+                                        String fname = "Relative" + relative.relativesId + "." + mimeType;
+                                        File saveFile = new File(myDir, fname);
+                                        BufferedSink sink = Okio.buffer(Okio.sink(saveFile));
+                                        sink.writeAll(response.body().source());
+                                        sink.close();
+                                        ContentValues values = relative.getValues();
+
+                                        values.put(DatabaseHelper.RELATIVES_ICON, saveFile.getPath());
+                                        new LoadDataFromDatabase("relatives", context, values);
+                                    }
+                                });
+                            } else {
+                                ContentValues values = relative.getValues();
+
+                                values.put(DatabaseHelper.RELATIVES_ICON, avatarURL);
+                                new LoadDataFromDatabase("relatives", context, values);
+                            }
+                        }
+                    }
+                    else{
+                        Log.d(TAG, "error " + response.code() + " " + response.message());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<ResponseRest.ListRelativesResponse>> call, Throwable t) {
+                    Log.e(TAG, "error get relatives ");
+                    t.printStackTrace();
+                }
+            });
+            /*restInterface.getListRelatives(sessionId, new Callback<List<ResponseRest.ListRelativesResponse>>() {
                 @Override
                 public void success(List<ResponseRest.ListRelativesResponse> listRelativesResponses, Response response) {
                     Log.d(TAG, "response from relatives" + response.getBody());
@@ -113,7 +181,7 @@ public class GetRelatives {
                 public void failure(RetrofitError error) {
                     Log.e(TAG, error.toString());
                 }
-            });
+            });*/
         }
         else{
             Log.d(TAG, "sessionId is null");

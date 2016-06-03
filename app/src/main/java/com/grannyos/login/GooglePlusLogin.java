@@ -39,17 +39,18 @@ import com.grannyos.socketEvent.GetCalendarEvent;
 import com.grannyos.socketEvent.GetRelatives;
 import com.squareup.okhttp.OkHttpClient;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.OkClient;
-import retrofit.client.Response;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class GooglePlusLogin implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
 
@@ -69,24 +70,27 @@ public class GooglePlusLogin implements GoogleApiClient.ConnectionCallbacks, Goo
                                         osType="Android", osVersion, udid;
     private int                         width,height;
     private float                       scale;
-    private RestInterface               restInterface;
     private String                      endPoint;
     private LoginUserData               register;
     private File                        myDir;
+    private RestInterface               restInterface;
 
 
     public GooglePlusLogin(Context con, Activity act,Fragment frag,ProgressDialog pd){
         this.endPoint = act.getResources().getString(R.string.endpoint);
         OkHttpClient okhttp = new OkHttpClient();
+        okhttp.setReadTimeout(60 * 100, TimeUnit.MILLISECONDS);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(act);
-        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endPoint).setClient(new OkClient(okhttp)).build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(endPoint)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        restInterface = retrofit.create(RestInterface.class);
         this.context=con;
         this.activity=act;
         this.fragment=frag;
         this.mConnectionProgressDialog=pd;
         this.editor = sharedPreferences.edit();
-        this.restInterface = restAdapter.create(RestInterface.class);
-        okhttp.setReadTimeout(60 * 100, TimeUnit.MILLISECONDS);
         googleApiClient=LoginWithGoogle();
     }
 
@@ -145,7 +149,56 @@ public class GooglePlusLogin implements GoogleApiClient.ConnectionCallbacks, Goo
                 Gson gson = new Gson();
                 Log.d(TAG, gson.toJson(register));
                 Log.d(TAG, endPoint);
-                restInterface.loginUser("application/json",register, new Callback<ResponseRest.LoginUserResponse>() {
+                Call<ResponseRest.LoginUserResponse> call = restInterface.loginUser("application/json", register);
+                call.enqueue(new Callback<ResponseRest.LoginUserResponse>() {
+                    @Override
+                    public void onResponse(Call<ResponseRest.LoginUserResponse> call, Response<ResponseRest.LoginUserResponse> response) {
+                        if(response.isSuccessful()) {
+                            Log.d(TAG, "response session" + response.body().getSession());
+                            Log.d(TAG, "response body" + response.body().toString());
+                            editor.putBoolean("showLoginScreen", true);
+                            editor.putString("sessionId", response.body().getSession());
+                            editor.apply();
+                            Intent intent = new Intent(activity, SocketService.class);
+                            activity.startService(intent);
+                            new GetRelatives(context);
+                            new GetCalendarEvent(context);
+                            new GetAlbum(context);
+                            new GetAlbumAssets(context);
+                            Call<ResponseRest.ProfileInfoResponse> callProfile = restInterface.getProfileInfo(response.body().getSession());
+                            callProfile.enqueue(new Callback<ResponseRest.ProfileInfoResponse>() {
+                                @Override
+                                public void onResponse(Call<ResponseRest.ProfileInfoResponse> call, Response<ResponseRest.ProfileInfoResponse> response) {
+                                    Log.d(TAG, "my own info " + response.body().toString());
+                                    Log.d(TAG, "my own id " + response.body().getMyId());
+                                    editor.putString("myId", response.body().getMyId());
+                                    editor.apply();
+                                    String root = Environment.getExternalStorageDirectory().toString();
+                                    myDir = new File(root + "/grannyos");
+                                    myDir.mkdirs();
+                                    FragmentManager fragmentManager = activity.getFragmentManager();
+                                    fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.content_frame, fragment).commit();
+                                }
+
+                                @Override
+                                public void onFailure(Call<ResponseRest.ProfileInfoResponse> call, Throwable t) {
+                                    Log.d(TAG, "error while get user info");
+                                    t.printStackTrace();
+                                }
+                            });
+                        }
+                        else{
+                            Log.d(TAG, "error " + response.code() + " " + response.message());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseRest.LoginUserResponse> call, Throwable t) {
+                        Log.d(TAG, "error while login/register user");
+                        t.printStackTrace();
+                    }
+                });
+                /*restInterface.loginUser("application/json", register, new Callback<ResponseRest.LoginUserResponse>() {
                     @Override
                     public void success(ResponseRest.LoginUserResponse loginResponse, Response response) {
                         Log.d(TAG, "response session" + loginResponse.getSession());
@@ -185,7 +238,7 @@ public class GooglePlusLogin implements GoogleApiClient.ConnectionCallbacks, Goo
                     public void failure(RetrofitError error) {
                         Log.d(TAG, "error while login/register user" + error.toString());
                     }
-                });
+                });*/
                 mConnectionProgressDialog.dismiss();
             }
         };

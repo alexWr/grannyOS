@@ -19,11 +19,11 @@ import com.grannyos.utils.GPSTracker;
 import com.grannyos.utils.HideViews;
 import com.grannyos.utils.ZoomOutPageTransformer;
 
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ViewPagerFragment extends Fragment implements View.OnClickListener{
 
@@ -125,9 +125,30 @@ public class ViewPagerFragment extends Fragment implements View.OnClickListener{
                 lon = location.getLongitude();
                 Log.d(TAG, "current location lat " + lat + " lon " + lon);
                 String endPoint = getActivity().getApplicationContext().getResources().getString(R.string.weatherEndpoint);
-                RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endPoint).build();
-                RestInterface restInterface = restAdapter.create(RestInterface.class);
-                restInterface.getWeather(lat, lon, 1, "metric", "f14cffd70e58afbe1ecc268c56ffd507", new Callback<WeatherResponse>() {
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(endPoint)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+                RestInterface restInterface = retrofit.create(RestInterface.class);
+                Call<WeatherResponse> call = restInterface.getWeather(lat, lon, 1, "metric", "f14cffd70e58afbe1ecc268c56ffd507");
+                call.enqueue(new Callback<WeatherResponse>() {
+                    @Override
+                    public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
+                        if(response.isSuccessful()) {
+                            city = response.body().getCity().getName();
+                        }
+                        else{
+                            Log.d(TAG, "error " + response.code() + " " + response.message());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<WeatherResponse> call, Throwable t) {
+                        Log.d(TAG, "error while get city name ");
+                        t.printStackTrace();
+                    }
+                });
+                /*restInterface.getWeather(lat, lon, 1, "metric", "f14cffd70e58afbe1ecc268c56ffd507", new Callback<WeatherResponse>() {
                     @Override
                     public void success(WeatherResponse weatherResponse, Response response) {
                         city = weatherResponse.getCity().getName();
@@ -137,7 +158,7 @@ public class ViewPagerFragment extends Fragment implements View.OnClickListener{
                     public void failure(RetrofitError error) {
                         Log.d(TAG, "error while get city name " + error);
                     }
-                });
+                });*/
             }
             else{
                 if(gps != null){

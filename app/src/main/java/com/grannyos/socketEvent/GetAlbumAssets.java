@@ -24,11 +24,10 @@ import java.util.concurrent.TimeUnit;
 
 import okio.BufferedSink;
 import okio.Okio;
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.OkClient;
-import retrofit.client.Response;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class GetAlbumAssets {
 
@@ -44,8 +43,11 @@ public class GetAlbumAssets {
         okHttp = new OkHttpClient();
         okHttp.setReadTimeout(6000 * 100, TimeUnit.MILLISECONDS);
         String endPoint = context.getResources().getString(R.string.endpoint);
-        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endPoint).setClient(new OkClient(okHttp)).build();
-        restInterface = restAdapter.create(RestInterface.class);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(endPoint)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        restInterface = retrofit.create(RestInterface.class);
         this.context = context;
         createDir();
         getAlbumAssetFromApi();
@@ -56,8 +58,80 @@ public class GetAlbumAssets {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         final String sessionId = sharedPreferences.getString("sessionId", null);
         if(sessionId != null) {
+            Call<List<ResponseRest.albumListResponse>> call = restInterface.getAlbumList(sessionId);
+            call.enqueue(new retrofit2.Callback<List<ResponseRest.albumListResponse>>() {
+                @Override
+                public void onResponse(Call<List<ResponseRest.albumListResponse>> call, Response<List<ResponseRest.albumListResponse>> response) {
+                    if(response.isSuccessful()) {
+                        for (int i = 0; i < response.body().size(); i++) {
+                            final ResponseRest.albumListResponse album = response.body().get(i);
 
-            restInterface.getAlbumList(sessionId, new Callback<List<ResponseRest.albumListResponse>>() {
+                            for (int j = 0; j < album.getAssets().size(); j++) {
+                                final ResponseRest.albumListResponse.Assets asset = response.body().get(i).getAssets().get(j);
+
+                                Log.d(TAG, asset.getResource());
+                                Request request = new Request.Builder()
+                                        .url(asset.getResource())
+                                        .build();
+                                try {
+                                    Thread.sleep(100);
+                                } catch (InterruptedException e) {
+                                    Log.d(TAG, "Error while thread sleep");
+                                    e.printStackTrace();
+                                }
+                                okHttp.newCall(request).enqueue(new com.squareup.okhttp.Callback() {
+                                    @Override
+                                    public void onFailure(Request request, IOException e) {
+                                        Log.d(TAG, "error while download image to album" + request.body());
+                                    }
+
+                                    @Override
+                                    public void onResponse(com.squareup.okhttp.Response response) throws IOException {
+
+                                        if (!response.isSuccessful())
+                                            throw new IOException("Unexpected code " + response);
+
+
+                                        String mimeType = MimeTypeMap.getFileExtensionFromUrl(asset.getResource());
+                                        String fname;
+                                        switch (asset.getType()) {
+                                            case "photo":
+                                                fname = "Image" + asset.assetId + "." + mimeType;
+                                                break;
+                                            case "video":
+                                                fname = "Video" + asset.assetId + "." + mimeType;
+                                                break;
+                                            default:
+                                                fname = "error";
+                                                break;
+                                        }
+                                        File saveFile = new File(myDir, fname);
+                                        BufferedSink sink = Okio.buffer(Okio.sink(saveFile));
+                                        sink.writeAll(response.body().source());
+                                        sink.close();
+
+                                        ContentValues contentValue = asset.getValues();
+
+                                        contentValue.put(DatabaseHelper.ASSET_RESOURCE, saveFile.getPath());
+                                        contentValue.put(DatabaseHelper.ASSET_ALBUM_ID, album.albumId);
+                                        new LoadDataFromDatabase("photo", context, contentValue);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                    else{
+                        Log.d(TAG, "erro " + response.code() + " " + response.message());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<ResponseRest.albumListResponse>> call, Throwable t) {
+                    Log.d(TAG, "Error to load asset resource ");
+                    t.printStackTrace();
+                }
+            });
+            /*restInterface.getAlbumList(sessionId, new Callback<List<ResponseRest.albumListResponse>>() {
                 @Override
                 public void success(final List<ResponseRest.albumListResponse> albumListResponses, Response response) {
 
@@ -123,7 +197,7 @@ public class GetAlbumAssets {
                 public void failure(RetrofitError error) {
                     Log.d(TAG, " " + error);
                 }
-            });
+            });*/
         }
         else{
             Log.d(TAG, "sessionId is null");

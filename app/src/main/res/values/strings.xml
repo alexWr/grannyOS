@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">GrannyOs</string>
-    <string name="endpoint">https://dev.grannyos.com/api</string>
+    <string name="endpoint">https://dev.grannyos.com/api/</string>
     <string name="endpointSocketURL">https://dev.grannyos.com</string>
     <string name="endpointSocketPath">/bone/socket.io</string>
     <string name="weatherEndpoint">http://api.openweathermap.org</string>

@@ -17,10 +17,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class WeatherList extends Fragment{
@@ -63,9 +64,56 @@ public class WeatherList extends Fragment{
         final ImageView mainWeatherIcon = (ImageView) rootView.findViewById(R.id.mainWeatherIcon);
         Log.d(TAG, "my current location in weather list lat " + lat + " lon " + lon );
         String endPoint = getResources().getString(R.string.weatherEndpoint);
-        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endPoint).build();
-        RestInterface restInterface = restAdapter.create(RestInterface.class);
-        restInterface.getWeather(lat, lon, 7, "metric", "f14cffd70e58afbe1ecc268c56ffd507", new Callback<WeatherResponse>() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(endPoint)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        RestInterface restInterface = retrofit.create(RestInterface.class);
+        Call<WeatherResponse> call = restInterface.getWeather(lat, lon, 7, "metric", "f14cffd70e58afbe1ecc268c56ffd507");
+        call.enqueue(new Callback<WeatherResponse>() {
+            @Override
+            public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
+                if(response.isSuccessful()) {
+                    mainTemp.setText((int) response.body().getWeather().get(position).getTemp().getTempDay() + "°");
+                    tempMorning.setText((int) response.body().getWeather().get(position).getTemp().getTempMorn() + "°");
+                    tempNoon.setText((int) response.body().getWeather().get(position).getTemp().getTempDay() + "°");
+                    tempEvening.setText((int) response.body().getWeather().get(position).getTemp().getTempEve() + "°");
+                    tempNight.setText((int) response.body().getWeather().get(position).getTemp().getTempNight() + "°");
+                    pressureEvening.setText("" + (int) (response.body().getWeather().get(position).getPressure() * 0.71) + " mm Hg");
+                    pressureNoon.setText("" + (int) (response.body().getWeather().get(position).getPressure() * 0.71) + " mm Hg");
+                    pressureMorning.setText("" + (int) (response.body().getWeather().get(position).getPressure() * 0.71) + " mm Hg");
+                    pressureNight.setText("" + (int) (response.body().getWeather().get(position).getPressure() * 0.71) + " mm Hg");
+                    windMorning.setText("" + String.format(Locale.ENGLISH, "%.1f", response.body().getWeather().get(position).getSpeed()) + " mph SW");
+                    windNoon.setText("" + String.format(Locale.ENGLISH, "%.1f", response.body().getWeather().get(position).getSpeed()) + " mph SW");
+                    windEvening.setText("" + String.format(Locale.ENGLISH, "%.1f", response.body().getWeather().get(position).getSpeed()) + " mph SW");
+                    windNight.setText("" + String.format(Locale.ENGLISH, "%.1f", response.body().getWeather().get(position).getSpeed()) + " mph SW");
+                    airMorning.setText("" + response.body().getWeather().get(position).getHumidity() + " %");
+                    airNoon.setText("" + response.body().getWeather().get(position).getHumidity() + " %");
+                    airEvening.setText("" + response.body().getWeather().get(position).getHumidity() + " %");
+                    airNight.setText("" + response.body().getWeather().get(position).getHumidity() + " %");
+                    mainWeatherIcon.setImageResource(R.drawable.cloudy);
+                    if (position == 0) {
+                        day.setText("Today");
+                    } else {
+                        Long date = response.body().getWeather().get(position).getDate();
+                        Date d = new Date(date * 1000);
+                        SimpleDateFormat sdf = new SimpleDateFormat("EEEE", Locale.ENGLISH);
+                        String dayOfTheWeek = sdf.format(d);
+                        day.setText(dayOfTheWeek);
+                    }
+                }
+                else{
+                    Log.d(TAG, "error " + response.code() + " " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WeatherResponse> call, Throwable t) {
+                Log.d(TAG, "Error in weather request ");
+
+            }
+        });
+        /*restInterface.getWeather(lat, lon, 7, "metric", "f14cffd70e58afbe1ecc268c56ffd507", new Callback<WeatherResponse>() {
             @Override
             public void success(WeatherResponse weatherResponse, Response response) {
                 mainTemp.setText((int) weatherResponse.getWeather().get(position).getTemp().getTempDay() + "°");
@@ -102,7 +150,7 @@ public class WeatherList extends Fragment{
             public void failure(RetrofitError error) {
                 Log.d(TAG, "Error in weather request " + error);
             }
-        });
+        });*/
         return rootView;
     }
 }
